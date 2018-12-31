@@ -75,7 +75,7 @@ mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
 - [Y.S. Jeong et al., 2017](http://www.dbpia.co.kr/Journal/ArticleDetail/NODE07286957)
 - [Y.S. Jeong et al., 2015](http://aclweb.org/anthology/K15-1028)
 
-특히, 아래 두 가지에 해당되는 경우에는 본 프로젝트 [책임자](https://github.com/bytecell)에게 연락하여 제휴/제안을 논의할 수 있습니다.
+특히, 아래 두 가지에 해당되는 경우에는 본 프로젝트 [책임자](pinodewaider@gmail.com)에게 연락하여 제휴/제안을 논의할 수 있습니다.
 
 1. slotminer 프로젝트를 영리 사업에 활용하고자 하는 경우
    - 연구, 비영리 사업에는 무료로 사용 가능
