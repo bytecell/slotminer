@@ -67,7 +67,15 @@ mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
 
 # 라이센스, 제휴, 제안
 
-본 프로젝트에서 제공하는 `기능`은 기본적으로 누구나 사용가능하지만, 아래 두 가지에 해당되는 경우에 이 프로젝트 책임자에게 연락하여 제휴/제안을 논의할 수 있다.
+연구, 비영리 사업 목적에 해당하는 경우, 본 프로젝트를 자유롭게 사용할 수 있다.
+단, 아래의 항목들 중에 적어도 1개를 해당 사업 또는 연구논문에 reference 로 추가하는 조건 하에 사용할 수 있다.
+
+- [Y.S. Jeong et al., 2016](http://www.lrec-conf.org/proceedings/lrec2016/pdf/175_Paper.pdf)
+- [C.G. Lim et al., 2018](http://aclweb.org/anthology/L18-1326)
+- [Y.S. Jeong et al., 2017](http://www.dbpia.co.kr/Journal/ArticleDetail/NODE07286957)
+- [Y.S. Jeong et al., 2015](http://aclweb.org/anthology/K15-1028)
+
+특히, 아래 두 가지에 해당되는 경우에는 본 프로젝트 책임자(bytecell@sch.ac.kr)에게 연락하여 제휴/제안을 논의할 수 있습니다.
 
 1. slotminer 프로젝트를 영리 사업에 활용하고자 하는 경우
    - 연구, 비영리 사업에는 무료로 사용 가능
