@@ -15,7 +15,7 @@
 
 원본: 여자친구와 다음주 수요일에 만나기로 했다.
 결과:
-{'calendar': 'GREGORIAN', 'type': 'DATE', 'extent': [(6, 13)], 'text': '다음주 수요일', 'name': 'slot_timex3', 'week': '+1'}
+{'name': 'slot_timex3', 'week_day': '3', 'extent': [(6, 13)], 'calendar': 'GREGORIAN', 'type': 'DATE', 'text': '다음주 수요일', 'week': '+1'}
 ```
 
 # 규칙 예시
