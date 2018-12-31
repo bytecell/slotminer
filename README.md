@@ -44,7 +44,8 @@
 기본적으로는 ISO-8601과 ISO-TimeML 표준을 따르지만, [Y.S. Jeong et al., 2016](http://www.lrec-conf.org/proceedings/lrec2016/pdf/175_Paper.pdf) 논문에서 언급하듯이, 실제 프로그램 상에서는 위 두개의 표준을 그대로 따르게 되면 매우 비효율적이거나 표현하지 못하는 시간 정보들이 존재한다.
 따라서, [Y.S. Jeong et al., 2016](http://www.lrec-conf.org/proceedings/lrec2016/pdf/175_Paper.pdf) 논문과 [C.G. Lim et al., 2018](http://aclweb.org/anthology/L18-1326) 논문에서 제시하는 새로운 Korean TimeML을 반영하여 시간정보를 추출한다.
 
-특히, 시간정보 중에서 EVENT, MAKEINSTANCE, TLINK 등은 과감히 빼고, TIMEX3 에서 주로 사용되는 표현을 추출한다.
+특히, 시간정보 중에서 EVENT, MAKEINSTANCE, TLINK 등은 제외하고, TIMEX3 에서도 주로 사용되는 표현 외에는 과감히 제외하였다.
+예를 들면, 추출되는 정보를 불필요하게 번잡하게 만드는 'SET' 타입 TIMEX3는 제외되었다.
 추출되는 TIMEX3 정보에 대한 정의는 아래와 같다.
 
 ```python
@@ -75,7 +76,7 @@ mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
 - [Y.S. Jeong et al., 2017](http://www.dbpia.co.kr/Journal/ArticleDetail/NODE07286957)
 - [Y.S. Jeong et al., 2015](http://aclweb.org/anthology/K15-1028)
 
-특히, 아래 두 가지에 해당되는 경우에는 본 프로젝트 책임자(pinodewaider@gmail.com)에게 연락하여 제휴/제안을 논의할 수 있습니다.
+특히, 아래 두 가지에 해당되는 경우에는 본 프로젝트 책임자(pinodewaider@gmail.com)에게 연락하여 제휴/제안을 논의할 수 있다.
 
 1. slotminer 프로젝트를 영리 사업에 활용하고자 하는 경우
    - 연구, 비영리 사업에는 무료로 사용 가능
