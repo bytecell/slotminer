@@ -1,4 +1,9 @@
 {
+	"attributes": [
+		{"same": "type"},
+		{"order": "year,season,month,week,day"}
+	],
+
 	"R1-9": {
 		"name": "slot_number",
 		"result": {"value": "[$s]"},
