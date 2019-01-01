@@ -159,7 +159,7 @@ class rule_process:
                             attr_keys = acont.split(',')
                             slot2_biggest_slotidx = None
                             for j, ak in enumerate(attr_keys):
-                                if slot2.get(ak) == None:
+                                if slot2.get(ak) != None:
                                     slot2_biggest_slotidx = j
                                     break
                             if slot2_biggest_slotidx != None:
