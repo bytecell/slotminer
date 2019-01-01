@@ -101,3 +101,85 @@ class rule_process:
 
         return result, variables
 
+    def _merge_slot(slot1, slot2, text):
+        ks1 = set(slot1.keys())
+        ks2 = set(slot2.keys())
+        for k in ks2 - ks1:
+            slot1[k] = slot2[k]
+        
+        ext1 = extent(slot1.get('extent'))
+        ext2 = slot2.get('extent')
+        ext1.merge(ext2)
+        for i in range(len(ext1)-1):
+            left_end = ext1[i][1]
+            right_begin = ext1[i+1][0]
+            if right_begin - left_end == 1 and text[left_end] == ' ':
+                ext1.add((left_end, left_end+1))
+        slot1['extent'] = ext1
+        
+        slottxt = ''
+        for b, e in ext1:
+            slottxt += text[b:e]
+        slot1['text'] = slottxt
+
+    def merge_slot(self, slots, text, policy=None):
+        if len(slots) < 2:
+            return slots
+
+        delidx = []
+        for i in range(len(slots)-1):
+            slot1 = slots[i]
+            slot2 = slots[i+1]
+            # extent 인접 여부
+            ext_slot1 = slot1.get('extent')
+            ext_slot2 = slot2.get('extent')
+            if not ext_slot1 or not ext_slot2:
+                continue
+            is_adjacent = False
+            for b1, e1 in ext_slot1:
+                for b2, e2 in ext_slot2:
+                    if b1 == e2 or b2 == e1:
+                        is_adjacent = True
+                        break
+                    if b2 - e1 == 1 and text[e1] == ' ':
+                        is_adjacent = True
+                        break
+                if is_adjacent:
+                    break
+            if is_adjacent:
+                if policy:
+                    chk_result = True
+                    for plc in policy:
+                        aname, acont = list(plc.items())[0]
+                        if aname == 'same':
+                            if slot1.get(acont) != slot2.get(acont):
+                                chk_result = False
+                                break
+                        elif aname == 'order':
+                            attr_keys = acont.split(',')
+                            slot2_biggest_slotidx = None
+                            for j, ak in enumerate(attr_keys):
+                                if slot2.get(ak) == None:
+                                    slot2_biggest_slotidx = j
+                                    break
+                            if slot2_biggest_slotidx != None:
+                                for j in range(slot2_biggest_slotidx+1, len(attr_keys)):
+                                    if slot1.get(attr_keys[j]) != None:
+                                        chk_result = False
+                                        break
+                        else:
+                            self._logger.error('Invalid attributes key type = {}'.format(aname))
+                            chk_result = False
+                            break
+                    if not chk_result:
+                        continue
+                
+                rule_process._merge_slot(slot1, slot2, text)
+                delidx.append(i+1)
+                i += 1
+        if delidx:
+            delidx.reverse()
+            for di in delidx:
+                del(slots[di])
+        return slots
+
