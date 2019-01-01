@@ -235,8 +235,9 @@ class rule_loader:
                     remain_txt = rule_phrase[e:]
                 # 그 외 경우,
                 else:
+                    self.make_tree(cur_txt, ext, cur_node)
                     new_node = cur_node
-                    remain_txt = cur_txt
+                    remain_txt = rule_phrase[e:]
         # 대괄호
         elif big_paren[0] == 0:
             b, e = big_paren
@@ -279,7 +280,7 @@ class rule_loader:
             elif cur_txt == '.':
                 new_node = node_all_letter(self._logger)
                 cur_node.add_child(new_node)
-            # Empty space
+            # white space
             elif cur_txt == ' ':
                 new_node = node_white_space(self._logger)
                 cur_node.add_child(new_node)
