@@ -33,6 +33,14 @@
 		]
 	},
 
+	"Ryear_1": {
+		"name": "slot_timex3",
+		"result": {"year": "[$s]", "type": "DATE", "calendar": "GREGORIAN"},
+		"condition": [
+			{"ext": "(내후[$s=+2]|내[$s=+1]|재작[$s=-2]|작[$s=-1])년"}
+		]
+	},
+
 	"Rmonths": {
 		"name": "slot_timex3",
 		"result": {"year": "[$s00][$sy]", "month": "[$s0][$s]", "type": "[$stype]", "calendar": "GREGORIAN"},
