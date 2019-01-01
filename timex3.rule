@@ -22,6 +22,15 @@
 		]
 	},
 	
+	"Rseason": {
+		"name": "slot_timex3",
+		"result": {"season": "[$s]", "type": "DATE", "calendar": "GREGORIAN"},
+		"condition": [
+			{"ext": "((초|늦)?(봄[$s=SPRING]|여름[$s=SUMMER]|가을[$s=FALL]|겨울[$s=WINTER])|1분기[$s=QUARTER1]|2분기[$s=QUARTER2]|3분기[$s=QUARTER3]|4분기[$s=QUARTER4])"},
+			{"next": "(에|,|을|를|이|[ ])"}
+		]
+	},
+
 	"Ryear": {
 		"name": "slot_timex3",
 		"result": {"year": "[$s0][$s]", "type": "[$stype]", "mod": "[$smod]", "calendar": "GREGORIAN"},
