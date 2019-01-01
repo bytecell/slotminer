@@ -21,6 +21,7 @@ import pdb
 class rule_loader:
     def __init__(self, logger):
         self._R = dict_tree()
+        self._P = None
         self._I = dict()
         self._logger = logger
 
@@ -352,6 +353,9 @@ class rule_loader:
 
         return result_tree
 
+    def get_policy(self):
+        return self._P
+
     def get_rules(self):
         return self._R.items()
 
@@ -359,7 +363,13 @@ class rule_loader:
         if len(self._R) <= 0:
             return False
 
-        for rname, rcont in self._R.items():
+        items = list(self._R.items()).copy()
+        for rname, rcont in items:
+            # attributes 에 대한 처리
+            if rname == 'attributes':
+                self._P = rcont.copy()
+                del(self._R[rname])
+                continue
             # result 부분
             result = rcont.get('result')
             if not result:
