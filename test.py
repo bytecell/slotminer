@@ -29,6 +29,7 @@ while True:
         break
     start_time = time.time()
     result, variables = rp.process(text)
+    result = rp.merge_slot(result, text, rl.get_policy())
     end_time = time.time()
     print('원본:', text)
     print('결과:')
