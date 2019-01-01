@@ -1,8 +1,11 @@
 import pdb
 
 class extent(list):
-    def __init__(self):
+    def __init__(self, x=None):
         list.__init__(self)
+        if x and type(x) == list:
+            for xitem in x:
+                self.add(xitem)
     def is_overlap(self, pair):
         for b, e in self:
             if b <= pair[0] and pair[0] < e:
@@ -10,6 +13,11 @@ class extent(list):
             if b < pair[1] and pair[1] <= e:
                 return True
             if pair[0] <= b and e <= pair[1]:
+                return True
+        return False
+    def is_adjacent(self, pair):
+        for b, e in self:
+            if b == pair[1] or e == pair[0]:
                 return True
         return False
     def copy(self):
