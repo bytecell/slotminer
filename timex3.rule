@@ -18,7 +18,6 @@
 		"name": "slot_timex3",
 		"result": {"mod": "[$s]", "type": "DATE", "calendar": "GREGORIAN"},
 		"condition": [
-			{"ext": "([ ])"},
 			{"ext": "(초(반)?[$s=START]|초중반[$s=START_MID]|중반[$s=MID]|중후반[$s=MID_END]|후반[$s=END])"}
 		]
 	},
