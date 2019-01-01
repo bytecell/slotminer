@@ -51,7 +51,7 @@
 		"name": "slot_timex3",
 		"result": {"year": "[$s]", "type": "DATE", "calendar": "GREGORIAN"},
 		"condition": [
-			{"ext": "(내후[$s=+2]|내[$s=+1]|재작[$s=-2]|작[$s=-1])년"}
+			{"ext": "((내후[$s=+2]|내[$s=+1]|재작[$s=-2]|작[$s=-1])년|올해[$s=0])"}
 		]
 	},
 
@@ -63,6 +63,15 @@
 			{"ext": "([ ])?"},
 			{"ext": "[$s=[@R1-9.value]([@R0-9.value]){0,}]개월[$stype=DURING][$s0=P]([$sy!=][$s00=P])?"},
 			{"ext+opt": "([ ])?((앞|전)[$s0=-][$stype=DATE]([$sy!=][$s00=-])?|(뒤|후)[$s0=+][$stype=DATE]([$sy!=][$s00=+])?)"}
+		]
+	},
+
+	"Rmonth_1": {
+		"name": "slot_timex3",
+		"result": {"month": "[$s0][$s]", "type": "[$stype]", "calendar": "GREGORIAN"},
+		"condition": [
+			{"ext": "([$s=[@R1-9.value]([@R0-9.value]){0,}][$s0=]|이번[$s0=][$s=0]|다음[$s0=+][$s=1]|다다음[$s0=+][$s=2]|저번[$s0=-][$s=1]|저저번[$s0=-][$s=2])([ ])?달[$stype=DATE]"},
+			{"ext+opt": "([ ])?((앞|전)[$s0=-]|(뒤|후)[$s0=+]|[$s0==]동안[$stype=DURATION])"}
 		]
 	},
 
@@ -159,7 +168,7 @@
 		"name": "slot_timex3",
 		"result": {"week": "[$s0][$s]", "type": "DATE", "week_day": "[$sw]", "calendar": "GREGORIAN"},
 		"condition": [
-			{"ext": "(다다음[$s0=+][$s=2]|(지지난|저저번)[$s0=-][$s=2]|다음[$s0=+][$s=1]|(지난|저번)[$s0=-][$s=1])주"},
+			{"ext": "(다다음[$s0=+][$s=2]|(지지난|저저번)[$s0=-][$s=2]|다음[$s0=+][$s=1]|(지난|저번)[$s0=-][$s=1]|이번[$s0=][$s=0])주"},
 			{"ext+opt": "([ ])?[$sw=@Rweek_day.week_day]"}
 		]
 	},
