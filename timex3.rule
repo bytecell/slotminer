@@ -73,10 +73,19 @@
 
 	"Rday": {
 		"name": "slot_timex3",
-		"result": {"day": "[$s0][$s]", "type": "[$stype]", "calendar": "GREGORIAN"},
+		"result": {"day": "[$s0][$s]", "type": "DATE", "calendar": "GREGORIAN"},
 		"condition": [
-			{"ext": "[$s=(10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|1|2|3|4|5|6|7|8|9)]일[$stype=DATE][$s0=]"},
-			{"ext+opt": "([$smod=$Rmod.mod]|동안[$stype=DURING][$s0=P])"}
+			{"ext": "[$s=(10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|1|2|3|4|5|6|7|8|9)]일"},
+			{"ext+opt": "([ ])?((앞|전)[$s0=-]|(뒤|후)[$s0=+])"}
+		]
+	},
+
+	"Rday_1": {
+		"name": "slot_timex3",
+		"result": {"day": "P[$s]", "type": "DURATION", "calendar": "GREGORIAN"},
+		"condition": [
+			{"ext": "([$s=[@R1-9.value]([@R0-9.value]){0,}]일|(며칠|몇일)[$s=X])"},
+			{"next": "(동안|([ ])?간)"}
 		]
 	},
 
