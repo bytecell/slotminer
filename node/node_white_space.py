@@ -17,13 +17,10 @@ class node_white_space(node):
 
         tmp = self._white_space(text[position:])
 
-        # text 맨 앞이나 맨 뒤이면 True
-        if position == len(text) or (position == 0 and not tmp):
-            pass_fail = True
-            return extent, position, pass_fail, reserved
         # extent 겹치면 False
-        elif add_extent and extent.is_overlap((position, position+1)):
+        if add_extent and extent.is_overlap((position, position+1)):
             return extent, position, pass_fail, reserved
+        
         # white-space 이면 True
         if tmp:
             pass_fail = True
