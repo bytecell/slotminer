@@ -76,6 +76,8 @@ class rule_process:
 
         self._logger.info('현재 고려중인 놈 = {}'.format(text[position]))
 
+        matched = []
+
         # 적용하기 (일부러 맨 뒤 규칙부터 적용)
         result = []
         rule_cands.reverse()
@@ -87,6 +89,7 @@ class rule_process:
                 x = '[*] 매칭된 규칙 = {}'.format(rname)
                 self._logger.info(x)
                 result += _result
+                matched += [rname]
                 break
 
         if not pass_fail:
@@ -96,10 +99,11 @@ class rule_process:
             pass
 
         if _position < len(text):
-            _result, variables = self.process(text, extent, _position, variables, cur_node)
+            _result, variables, _matched = self.process(text, extent, _position, variables, cur_node)
             result += _result
+            matched += _matched
 
-        return result, variables
+        return result, variables, matched
 
     def _merge_slot(slot1, slot2, text):
         ks1 = set(slot1.keys())

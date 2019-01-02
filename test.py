@@ -28,10 +28,11 @@ while True:
     if not text:
         break
     start_time = time.time()
-    result, variables = rp.process(text)
+    result, variables, matched = rp.process(text)
     result = rp.merge_slot(result, text, rl.get_policy())
     end_time = time.time()
     print('원본:', text)
+    print('매칭된 규칙들:', matched)
     print('결과:')
     for x in result:
         print('{}'.format(x))
