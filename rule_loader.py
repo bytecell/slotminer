@@ -15,6 +15,7 @@ from node.node_one_or_not import node_one_or_not
 from node.node_freq import node_freq
 from node.node_concat import node_concat
 from node.node_var_condition import node_var_condition
+from node.node_empty_begin import node_empty_begin
 import re
 import pdb
 
@@ -284,6 +285,10 @@ class rule_loader:
             # white space
             elif cur_txt == ' ':
                 new_node = node_white_space(self._logger)
+                cur_node.add_child(new_node)
+            # empty-begin
+            elif cur_txt == '^':
+                new_node = node_empty_begin(self._logger)
                 cur_node.add_child(new_node)
             else:
                 self._logger.error('invalid syntax for [ ] = {}'.format(rule_phrase))
