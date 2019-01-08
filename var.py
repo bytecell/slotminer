@@ -1,5 +1,5 @@
-from stack import stack
-from queue import queue
+from sm_stack import stack
+from sm_queue import queue
 import copy
 import pdb
 
