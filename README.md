@@ -11,7 +11,7 @@
 ```python
 원본: 3년 5개월동안
 결과:
-{'year': 'P3', 'type': 'DURING', 'month': 'P5', 'calendar': 'GREGORIAN', 'text': '3년 5개월', 'name': 'slot_timex3', 'extent': [(0, 6)]}
+{'year': 'P3', 'type': 'DURATION', 'month': 'P5', 'calendar': 'GREGORIAN', 'text': '3년 5개월', 'name': 'slot_timex3', 'extent': [(0, 6)]}
 
 원본: 여자친구와 다음주 수요일에 만나기로 했다.
 결과:
