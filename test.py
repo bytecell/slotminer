@@ -13,7 +13,7 @@ logger.addHandler(streamHandler)
 
 # 규칙을 파일로부터 읽어들임
 rl = rule_loader(logger=logger)
-rl.load('./timex3.rule')
+rl.load('./rule/timex3.rule')
 if not rl.generate_rules():
     exit()
 # 읽어들인 규칙을 화면에 표시
