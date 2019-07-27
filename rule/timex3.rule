@@ -72,7 +72,7 @@
 		"result": {"month": "[$s0][$s]", "type": "[$stype]", "calendar": "GREGORIAN"},
 		"condition": [
 			{"ext": "([$s=[@R1-9.value]([@R0-9.value]){0,}][$s0=]|이번[$s0=][$s=0]|다음[$s0=+][$s=1]|다다음[$s0=+][$s=2]|저번[$s0=-][$s=1]|저저번[$s0=-][$s=2])([ ])?달[$stype=DATE]"},
-			{"ext+opt": "([ ])?((앞|전)[$s0=-]|(뒤|후)[$s0=+]|[$s0==]동안[$stype=DURATION])"}
+			{"ext+opt": "([ ])?((앞|전)[$s0=-]|(뒤|후)[$s0=+]|[$s0=P]동안[$stype=DURATION])"}
 		]
 	},
 
