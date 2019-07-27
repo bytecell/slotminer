@@ -176,9 +176,60 @@
 
 	"Rsecond": {
 		"name": "slot_timex3",
-		"result": {"second": "[$s]", "calendar": "GREGORIAN"},
+		"result": {"second": "[$s]", "mod": "[$smod]", "type": "[$stype]", "calendar": "GREGORIAN"},
 		"condition": [
-			{"ext": "[$s=[@R1-9.value]([@R0-9.value]){0,}]초"}
+			{"ext": "[$s=[@R1-9.value]([@R0-9.value]){0,}]초[$stype=DATE]"},
+			{"ext+opt": "([$smod=@Rmod.mod]|동안[$stype=DURING])"}
+		]
+	},
+
+	"Rminute": {
+		"name": "slot_timex3",
+		"result": {"minute": "[$s]", "mod": "[$smod]", "type": "[$stype]", "calendar": "GREGORIAN"},
+		"condition": [
+			{"ext": "[$s=[@R1-9.value]([@R0-9.value]){0,}]분[$stype=DATE]"},
+			{"ext+opt": "([$smod=@Rmod.mod]|동안[$stype=DURING])"}
+		]
+	},
+
+	"Rhour": {
+		"name": "slot_timex3",
+		"result": {"hour": "[$s]", "mod": "[$smod]", "type": "[$stype]", "calendar": "GREGORIAN"},
+		"condition": [
+			{"ext": "[$s=[@R1-9.value]([@R0-9.value]){0,}]시[$stype=DATE]"},
+			{"ext+opt": "([$smod=@Rmod.mod]|간[$stype=DURING])"}
+		]
+	},
+
+	"Rhourminute": {
+		"name": "slot_timex3",
+		"result": {"hour": "[$sh]", "type": "[$stype]", "mod": "[$smod]", "minute": "[$sm]", "calendar": "GREGORIAN"},
+		"condition": [
+			{"ext": "([$sh,$stype=@Rhour.hour,type])"},
+			{"ext": "([ ])?"},
+			{"ext": "([$sm,$smod=$Rminute.minute,mod])"}
+		]
+	},
+
+	"Rhourminutesecond": {
+		"name": "slot_timex3",
+		"result": {"hour": "[$sh]", "minute": "[$sm]", "second": "[$ss]", "mod": "[$smod]", "type": "[$stype]", "calendar": "GREGORIAN"},
+		"condition": [
+			{"ext": "([$sh,$stype=@Rhour.hour,type])"},
+			{"ext": "([ ])?"},
+			{"ext": "([$sm=@Rminute.minute])?"},
+			{"ext": "([ ])?"},
+			{"ext": "([$ss,$smod=@Rsecond.second,mod])"}
+		]
+	},
+
+	"Rminutesecond": {
+		"name": "slot_timex3",
+		"result": {"minute": "[$sm]", "second": "[$ss]", "mod": "[$smod]", "type": "[$stype]", "calendar": "GREGORIAN"},
+		"condition": [
+			{"ext": "([$sm=@Rminute.minute])"},
+			{"ext": "([ ])?"},
+			{"ext": "([$ss,$smod,$stype=@Rsecond.second,mod,type])"}
 		]
 	},
 
