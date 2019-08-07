@@ -25,7 +25,8 @@ class node_all_letter(node):
             _extent.add((position, position+1))
             extent = _extent
             position += 1
-            reserved += [text[position]]
+            if position < len(text):
+                reserved += [text[position]]
 
         return extent, position, pass_fail, reserved
 
