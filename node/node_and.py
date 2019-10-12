@@ -15,6 +15,8 @@ class node_and(node):
 
         reserved = []
         for cnode in self._children:
+            while _position < len(text) and text[_position] == ' ':
+                _position += 1
             _extent, _position, _pass_fail, _reserved = cnode.process(text,
                     _extent, _position, var, add_extent)
             if not _pass_fail:

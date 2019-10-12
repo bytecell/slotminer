@@ -45,6 +45,7 @@ class rule_process:
             # result 생성
             _result = dict()
             _result['extent'] = list(set(_extent) - set(extent))
+            _result['extent'] = sorted(_result['extent'], key=lambda tup: tup[0])
             _result['name'] = rcont['name']
             _result['text'] = ''
             for b, e in _result['extent']:
@@ -86,7 +87,7 @@ class rule_process:
             pass_fail, _result, _extent, _position = rule_process._process(\
                 rname, rcont, text, extent, position, variables, self._logger)
             if pass_fail:
-                x = '[*] 매칭된 규칙 = {}'.format(rname)
+                x = '[*] 매칭된 규칙 = {}, extent = {}'.format(rname, _extent)
                 self._logger.info(x)
                 result += _result
                 matched += [rname]
