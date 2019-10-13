@@ -138,6 +138,10 @@ mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
   {'extent': [(19, 22)], 'value': 'pet', 'text': 'cat', 'name': 'slot_sample'}
   ```
   
+  주의할 점으로,
+  | 표현을 사용할 때에는 항목들을 왼쪽부터 고려한다는 점에 유의해야 한다.
+  예를 들어, (dog|doggie) 라는 기술할 경우, "It's a doggie" 문장에 대해 적용했을 때 "dog" 부분이 매칭될 것이다. 규칙에 dog 또는 doggie 를 검출하도록 기술했음에도 불구하고, dog 가 doggie 보다 왼쪽에 있으므로, dog가 매칭되었을 때 doggie는 더이상 고려되지 않는 것이다.
+  이런 문제를 해결하고 싶다면, `(doggie|dog)` 또는 `(dog(gie)?)` 와 같이 기술할 수 있다.  
   
 5. 규칙 작성 방법 (기초레벨 III)
 
@@ -182,6 +186,80 @@ mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
    {'text': 'dog', 'value': 'dog', 'name': 'slot_sample', 'extent': [(9, 12)]}
    {'text': 'cat', 'value': 'cat', 'name': 'slot_sample', 'extent': [(19, 22)]}
    ```
+   
+   위 규칙 예시에서는 변수의 값에 소괄호가 등장하였는데, 반대로 소괄호와 |(or) 연산의 안쪽에 변수 값을 지정하는 것도 가능하다.
+   물론, 이 두 가지를 섞어서 쓰는 것도 가능하다.
+   아래 예시를 관찰해보자.
+   가장 바깥쪽 | 표현의 왼쪽 부분은 (dog|puppy) 를 만족할 경우 $s 변수에 `강아지` 값을 넣는다는 내용이며, 오른쪽 부분은 (cat|kitten) 을 만족할 경우 그 텍스트 자체를 $s 변수에 넣는다는 내용이다.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "[$s]"},
+     "condition": [
+        {"ext": "((dog|puppy)[$s=강아지]|[$s=(cat|kitten)])"}
+     ]
+   }
+   ```
+   
+   이 규칙을 텍스트 "I have a dog and a kitten."에 적용하면, 아래와 같은 결과물이 생성된다.
+   
+   ```python
+   {'text': 'dog', 'name': 'slot_sample', 'value': '강아지', 'extent': [(9, 12)]}
+   {'text': 'kitten', 'name': 'slot_sample', 'value': 'kitten', 'extent': [(17, 23)]}
+   ```
+   
+   
+7. 규칙 작성 방법 (중급레벨 II)
+
+   지금까지는 condition 부분에 1개의 조건만 포함시켰으나, 2개 이상의 조건을 포함시킬 수 있다.
+   아래 예시를 보자.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "[$s]"},
+     "condition": [
+        {"ext": "(one[$s=1]|two[$s=2])"},
+        {"ext": "dollar"}
+     ]
+   }
+   ```
+   
+   이 규칙을 텍스트 "I have two dollars!"에 적용하면, 아래와 같은 결과물이 생성된다.
+   
+   ```python
+   {'extent': [(7, 10), (11, 17)], 'name': 'slot_sample', 'text': 'twodollar', 'value': '2'}
+   ```
+   
+   기술하였던 조건들과 결과물을 관찰해보면, 결국 2개의 조건들을 `(one[$s=1]|two[$s=2])dolloar`로써 1개의 조건으로 합칠 수 있다는 것을 알 수 있다.
+   이렇듯 여러 개의 조건들을 1개의 조건으로 쉽게 합칠 수 있음에도 불구하고, condition 부분에서 여러 조건들을 둘 수 있도록 한 것은 아래와 규칙을 보면 알 수 있다.
+   이 규칙은 언뜻 보면 위 규칙과 동일해 보이지만, 첫 번째 조건의 키가 `ext`가 아닌 `next`라는 점을 알 수 있다.
+   조건의 키가 `ext`인 것은 결과물 텍스트 extent(범위)에 포함이 된다는 의미이며, `next`는 포함되지 않는다는 뜻이다.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "[$s]"},
+     "condition": [
+        {"next": "(one[$s=1]|two[$s=2])"},
+        {"ext": "dollar"}
+     ]
+   }
+   ```
+   
+   이 규칙을 텍스트 "I have two dollars!"에 적용하면, 아래와 같은 결과물이 생성된다.
+   
+   ```python
+   {'extent': [(11, 17)], 'name': 'slot_sample', 'text': 'dollar', 'value': '2'}
+   ```
+   
+   각 조건의 키는 `ext` 또는 `next`중에 하나만을 가질 수 있으며, 조건을 체크하면서도 원하는 부분만 결과물 텍스트 범위에 포함할 수 있게 된다.
+
+8. 규칙 작성 방법 (중급레벨 III)
+
+   TBD   
+  
 
 
 # 라이센스, 제휴
