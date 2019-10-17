@@ -42,6 +42,8 @@
 
 기본적으로는 다양한 형태의 `slot을 추출`하도록 설계되었으며, 규칙 파일에서 추출 규칙들을 정의함으로써 기능 확장이 가능하다.
 개발자는 slotminer 의 소스코드에 기여할 수도 있고, 특정 slot을 추출하는 규칙 파일을 생성/개선함으로써 기여가 가능하다.
+특징으로는 white-space (스페이스바)은 텍스트 매칭 대상에서 기본적으로 무시되므로, 규칙이 "기원전"일 경우, "기  원  전", "기원  전" 등과 같은 텍스트들이 모두 규칙 매칭에 통과된다.
+명시적으로 규칙에서 white-space 를 체크하도록 하고 싶을 경우, white-space 를 대괄호로 둘러싼 형태(예: [ ])를 사용하면 된다. 
 
 현재 제공되는 기능은 아래와 같다.
 
@@ -75,6 +77,189 @@ week_day ::= 0 | 1 | 2 | 3 | 4 | 5 | 6
 mark ::= 'P' | '+' | '-' | '_' (Note: '_'는 '기원전' 표현 전용)
 mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
 ```
+
+
+# 규칙 작성 방법
+
+1. 규칙파일: 규칙파일은 1개 이상의 규칙들의 모음이며, 규칙은 json 양식으로 기술된다. 규칙파일에는 다음의 것들이 포함된다.
+
+   - 전/후처리 정보
+   - 규칙들
+  
+2. 규칙: 규칙은 기본적으로 텍스트 매칭을 통해 `결과물`(슬롯 또는 태그)을 생성한다. 규칙파일에서 기술되는 각각의 규칙은 아래 사항을 포함한다.
+
+   - 규칙 이름 (주의: 규칙이름은 중복될 수 없다. 중복되면 나중에 정의된 규칙이 앞선 규칙을 덮어쓴다.)
+   - 생성될 결과물의 이름, 키-값의 쌍, 조건들
+      - 참고: 결과물은 최소한 3가지(name, text, extent)의 키-값 쌍을 포함한다.
+   
+3. 규칙 작성 방법 (기초레벨 I)
+
+   아래 규칙을 참고하자. 이 규칙에서는, 규칙의 이름은 Rule 이고, 결과물의 이름은 slot_sample, 키-값의 쌍은 value: 100 이며, 조건들은 condition 에 해당한다.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "100"},
+     "condition": [
+        {"ext": "hundred"}
+     ]
+   }
+   ```
+  
+  이 규칙을 텍스트 "one hundred"에 적용하면, 아래와 같은 결과물이 생성된다. 
+  
+  ```python
+  {'name': 'slot_sample', 'extent': [(4, 11)], 'text': 'hundred', 'value': '100'}
+  ```
+  
+4. 규칙 작성 방법 (기초레벨 II)
+
+   아래 규칙을 참고하자.
+   condition 부분에서 매칭하려는 텍스트 부분을 관찰해보면, 정규식 문법과 유사하게 작성된 것을 볼 수 있다.
+   사용가능한 표현들은 +, ?, | 이다.
+   이 표현들은 소괄호와 항상 함께 써야 한다. 예를 들어, (a)+ 이라고 하면, a 문자 1개 이상을 의미한다.
+   기본적으로 공백은 무시하도록 되어있는데, 만약 공백을 체크하고 싶을 경우에는 [ ] 이라고 기술하면 된다.
+   문장의 맨 첫 부분임을 체크하고 싶은 경우, [^] 이라고 기술할 수 있다.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "pet"},
+     "condition": [
+        {"ext": "(dog|cat)"}
+     ]
+   }
+   ```
+  
+  이 규칙을 텍스트 "I have a dog and a cat"에 적용하면, 아래와 같은 결과물이 생성된다.
+  
+  ```python
+  {'extent': [(9, 12)], 'value': 'pet', 'text': 'dog', 'name': 'slot_sample'}
+  {'extent': [(19, 22)], 'value': 'pet', 'text': 'cat', 'name': 'slot_sample'}
+  ```
+  
+  주의할 점으로,
+  | 표현을 사용할 때에는 항목들을 왼쪽부터 고려한다는 점에 유의해야 한다.
+  예를 들어, (dog|doggie) 라는 기술할 경우, "It's a doggie" 문장에 대해 적용했을 때 "dog" 부분이 매칭될 것이다. 규칙에 dog 또는 doggie 를 검출하도록 기술했음에도 불구하고, dog 가 doggie 보다 왼쪽에 있으므로, dog가 매칭되었을 때 doggie는 더이상 고려되지 않는 것이다.
+  이런 문제를 해결하고 싶다면, `(doggie|dog)` 또는 `(dog(gie)?)` 와 같이 기술할 수 있다.  
+  
+5. 규칙 작성 방법 (기초레벨 III)
+
+   아래 규칙을 참고하자.
+   먼저 condition 부분을 잘 관찰해보자. 대괄호로 둘러싸인 부분의 동작은 `s` 라는 이름의 `변수`를 만들고, 그 변수에 `3`이라는 값을 넣는 것이다.
+   그 다음은 result 부분을 살펴보면, value 키의 값에 `변수 s`가 사용되었다. 즉, condition 부분에서 생성한 변수의 값을 결과물의 키-값에서 사용이 가능한 것이다.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "[$s]"},
+     "condition": [
+        {"ext": "three[$s=3]"}
+     ]
+   }
+   ```
+   
+   이 규칙을 텍스트 "I am three years old"에 적용하면, 아래와 같은 결과물이 생성된다.
+
+   ```python
+   {'text': 'three', 'extent': [(5, 10)], 'value': '3', 'name': 'slot_sample'}
+   ```
+
+6. 규칙 작성 방법 (중급레벨 I)
+
+   아래 규칙을 참고하자.
+   condition 에서 변수를 생성하고 있는데, 변수의 값에 해당하는 부분을 소괄호로 둘러싸서 or 연산(|)으로 기술하는 경우, 이 부분이 직접 변수의 값에 들어가게 된다.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "[$s]"},
+     "condition": [
+        {"ext": "[$s=(dog|cat)]"}
+     ]
+   }
+   ```
+   
+   이 규칙을 텍스트 "I have a dog and a cat"에 적용하면, 아래와 같은 결과물이 생성된다.
+
+   ```python
+   {'text': 'dog', 'value': 'dog', 'name': 'slot_sample', 'extent': [(9, 12)]}
+   {'text': 'cat', 'value': 'cat', 'name': 'slot_sample', 'extent': [(19, 22)]}
+   ```
+   
+   위 규칙 예시에서는 변수의 값에 소괄호가 등장하였는데, 반대로 소괄호와 |(or) 연산의 안쪽에 변수 값을 지정하는 것도 가능하다.
+   물론, 이 두 가지를 섞어서 쓰는 것도 가능하다.
+   아래 예시를 관찰해보자.
+   가장 바깥쪽 | 표현의 왼쪽 부분은 (dog|puppy) 를 만족할 경우 $s 변수에 `강아지` 값을 넣는다는 내용이며, 오른쪽 부분은 (cat|kitten) 을 만족할 경우 그 텍스트 자체를 $s 변수에 넣는다는 내용이다.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "[$s]"},
+     "condition": [
+        {"ext": "((dog|puppy)[$s=강아지]|[$s=(cat|kitten)])"}
+     ]
+   }
+   ```
+   
+   이 규칙을 텍스트 "I have a dog and a kitten."에 적용하면, 아래와 같은 결과물이 생성된다.
+   
+   ```python
+   {'text': 'dog', 'name': 'slot_sample', 'value': '강아지', 'extent': [(9, 12)]}
+   {'text': 'kitten', 'name': 'slot_sample', 'value': 'kitten', 'extent': [(17, 23)]}
+   ```
+   
+   
+7. 규칙 작성 방법 (중급레벨 II)
+
+   지금까지는 condition 부분에 1개의 조건만 포함시켰으나, 2개 이상의 조건을 포함시킬 수 있다.
+   아래 예시를 보자.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "[$s]"},
+     "condition": [
+        {"ext": "(one[$s=1]|two[$s=2])"},
+        {"ext": "dollar"}
+     ]
+   }
+   ```
+   
+   이 규칙을 텍스트 "I have two dollars!"에 적용하면, 아래와 같은 결과물이 생성된다.
+   
+   ```python
+   {'extent': [(7, 10), (11, 17)], 'name': 'slot_sample', 'text': 'twodollar', 'value': '2'}
+   ```
+   
+   기술하였던 조건들과 결과물을 관찰해보면, 결국 2개의 조건들을 `(one[$s=1]|two[$s=2])dolloar`로써 1개의 조건으로 합칠 수 있다는 것을 알 수 있다.
+   이렇듯 여러 개의 조건들을 1개의 조건으로 쉽게 합칠 수 있음에도 불구하고, condition 부분에서 여러 조건들을 둘 수 있도록 한 것은 아래와 규칙을 보면 알 수 있다.
+   이 규칙은 언뜻 보면 위 규칙과 동일해 보이지만, 첫 번째 조건의 키가 `ext`가 아닌 `next`라는 점을 알 수 있다.
+   조건의 키가 `ext`인 것은 결과물 텍스트 extent(범위)에 포함이 된다는 의미이며, `next`는 포함되지 않는다는 뜻이다.
+   
+   ```python
+   "Rule" : {
+     "name": "slot_sample",
+     "result": {"value": "[$s]"},
+     "condition": [
+        {"next": "(one[$s=1]|two[$s=2])"},
+        {"ext": "dollar"}
+     ]
+   }
+   ```
+   
+   이 규칙을 텍스트 "I have two dollars!"에 적용하면, 아래와 같은 결과물이 생성된다.
+   
+   ```python
+   {'extent': [(11, 17)], 'name': 'slot_sample', 'text': 'dollar', 'value': '2'}
+   ```
+   
+   각 조건의 키는 `ext` 또는 `next`중에 하나만을 가질 수 있으며, 조건을 체크하면서도 원하는 부분만 결과물 텍스트 범위에 포함할 수 있게 된다.
+
+8. 규칙 작성 방법 (중급레벨 III)
+
+   TBD   
+  
 
 
 # 라이센스, 제휴
