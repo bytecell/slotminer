@@ -4,6 +4,8 @@ import logging
 import time
 import pdb
 
+# 바꿨어!
+
 # logger 생성
 logger = logging.getLogger('sm')
 # logging.INFO는 화면에 수행과정 출력, logging.ERROR는 에러메시지만 출력
@@ -13,7 +15,7 @@ logger.addHandler(streamHandler)
 
 # 규칙을 파일로부터 읽어들임
 rl = rule_loader(logger=logger)
-rl.load('./rule/timex3.rule')
+rl.load('./rule/sample.rule')
 if not rl.generate_rules():
     exit()
 # 읽어들인 규칙을 화면에 표시
