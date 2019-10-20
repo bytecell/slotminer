@@ -4,8 +4,6 @@ import logging
 import time
 import pdb
 
-# 바꿨어!
-
 # logger 생성
 logger = logging.getLogger('sm')
 # logging.INFO는 화면에 수행과정 출력, logging.ERROR는 에러메시지만 출력
