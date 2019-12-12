@@ -6,6 +6,21 @@
 - 질의응답 시스템
 - 대화시스템 (챗봇)
 
+# 설치 방법
+
+본 프로젝트를 클론받고 환경변수 설정
+
+```python
+(예시) 만약 bash 사용 중이라면, ~/.bashrc 파일에서 아래와 같이 환경설정 
+
+SLOTMINER=/home/you/slotminer
+PYTHON_PATH=$PYTHON_PATH:$SLOTMINER
+```
+
+# 의존성 (dependency)
+
+- python 3.x
+
 # 테스트 실행 방법
 
 아래와 같이 쉘창에서 테스트를 실행 가능하다.
