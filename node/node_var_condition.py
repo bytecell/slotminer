@@ -16,7 +16,7 @@ class node_var_condition(node):
 
     def check_var_condition(txt):
         for x in node_var_condition._CHK_DICT_.keys():
-            if x in txt:
+            if x in txt and txt.find(x) != 0:
                 return x, node_var_condition._CHK_DICT_[x]
         return None, None
 
