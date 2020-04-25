@@ -11,11 +11,13 @@ from node.node_white_space import node_white_space
 from node.node_all_letter import node_all_letter
 from node.node_match_text import node_match_text
 from node.node_plus import node_plus
+from node.node_not_match_text import node_not_match_text
 from node.node_one_or_not import node_one_or_not
 from node.node_freq import node_freq
 from node.node_concat import node_concat
 from node.node_var_condition import node_var_condition
 from node.node_empty_begin import node_empty_begin
+from node.node_empty_end import node_empty_end
 import re
 import pdb
 
@@ -180,6 +182,15 @@ class rule_loader:
                     remain_txt = rule_phrase[e+1:]
                 else:
                     remain_txt = None
+            # ! 체크
+            elif e < len(rule_phrase) and rule_phrase[e] == '!':
+                new_node = node_not_match_text(rule_phrase[b+1:e-1], self._logger)
+                cur_node.add_child(new_node)
+                #self.make_tree(rule_phrase[b:e], ext, new_node)
+                if len(rule_phrase) > e+1:
+                    remain_txt = rule_phrase[e+1:]
+                else:
+                    remain_txt = None
             # ? 체크
             elif e < len(rule_phrase) and rule_phrase[e] == '?':
                 new_node = node_one_or_not(self._logger)
@@ -287,8 +298,12 @@ class rule_loader:
                 new_node = node_white_space(self._logger)
                 cur_node.add_child(new_node)
             # empty-begin
-            elif cur_txt == '^':
+            elif cur_txt == '<':
                 new_node = node_empty_begin(self._logger)
+                cur_node.add_child(new_node)
+            # empty-end
+            elif cur_txt == '>':
+                new_node = node_empty_end(self._logger)
                 cur_node.add_child(new_node)
             else:
                 self._logger.error('invalid syntax for [ ] = {}'.format(rule_phrase))
