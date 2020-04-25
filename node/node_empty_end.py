@@ -1,4 +1,5 @@
 from node.node import node
+import pdb
 import re
 
 class node_empty_end(node):
@@ -15,10 +16,10 @@ class node_empty_end(node):
             self._logger.error('empty_node must be terminal node')
             return extent, position, pass_fail, reserved
 
-        if position + 1 >= len(text):
+        if position >= len(text):
             pass_fail = True
         else:
-            tmp = self._white_space(text[position+1:position+2])
+            tmp = self._white_space(text[position-1:position])
             if tmp:
                 pass_fail = True
 
