@@ -75,7 +75,8 @@ class rule_process:
         if not variables:
             variables = var(self._logger)
 
-        self._logger.info('현재 고려중인 놈 = {}'.format(text[position]))
+        if self._logger:
+            self._logger.info('현재 고려중인 놈 = {}'.format(text[position]))
 
         matched = []
 
@@ -83,12 +84,14 @@ class rule_process:
         result = []
         rule_cands.reverse()
         for rname, rcont in rule_cands:
-            self._logger.info('고려하는 규칙 = {}'.format(rname))
+            if self._logger:
+                self._logger.info('고려하는 규칙 = {}'.format(rname))
             pass_fail, _result, _extent, _position = rule_process._process(\
                 rname, rcont, text, extent, position, variables, self._logger)
             if pass_fail:
-                x = '[*] 매칭된 규칙 = {}, extent = {}'.format(rname, _extent)
-                self._logger.info(x)
+                if self._logger:
+                    x = '[*] 매칭된 규칙 = {}, extent = {}'.format(rname, _extent)
+                    self._logger.info(x)
                 result += _result
                 matched += [rname]
                 break
@@ -115,11 +118,14 @@ class rule_process:
         ext1 = extent(slot1.get('extent'))
         ext2 = slot2.get('extent')
         ext1.merge(ext2)
-        for i in range(len(ext1)-1):
+        i = 0
+        while i < len(ext1)-1:
             left_end = ext1[i][1]
+            print('left_end = ', left_end, i, len(ext1))
             right_begin = ext1[i+1][0]
             if right_begin - left_end == 1 and text[left_end] == ' ':
                 ext1.add((left_end, left_end+1))
+            i += 1
         slot1['extent'] = ext1
         
         slottxt = ''
@@ -173,7 +179,8 @@ class rule_process:
                                         chk_result = False
                                         break
                         else:
-                            self._logger.error('Invalid attributes key type = {}'.format(aname))
+                            if self._logger:
+                                self._logger.error('Invalid attributes key type = {}'.format(aname))
                             chk_result = False
                             break
                     if not chk_result:
