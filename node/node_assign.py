@@ -13,10 +13,12 @@ class node_assign(node):
         values = vvalue.split(',')
         for i, n in enumerate(names):
             if n[0] != '$':
-                self._logger.error('var name must begin with $')
+                if self._logger:
+                    self._logger.error('var name must begin with $')
             n = n[1:]
             if i >= len(values):
-                self._logger.error('value not exist')
+                if self._logger:
+                    self._logger.error('value not exist')
             v = values[i]
             self._attr['variables'][n] = v
 
@@ -26,7 +28,8 @@ class node_assign(node):
 
         no_child = False
         if self.num_child() > 1:
-            self._logger.error('Invalid #children for node_assign')
+            if self._logger:
+                self._logger.error('Invalid #children for node_assign')
             return extent, position, pass_fail, reserved
         elif self.num_child() == 0:
             no_child = True

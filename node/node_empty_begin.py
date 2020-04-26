@@ -12,7 +12,8 @@ class node_empty_begin(node):
         reserved = []
 
         if self.num_child():
-            self._logger.error('empty_node must be terminal node')
+            if self._logger:
+                self._logger.error('empty_node must be terminal node')
             return extent, position, pass_fail, reserved
 
         if position >= len(text):

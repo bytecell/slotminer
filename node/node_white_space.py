@@ -12,7 +12,8 @@ class node_white_space(node):
         pass_fail = False
         reserved = []
         if self.num_child():
-            self._logger.error('white_space_node must be terminal node')
+            if self._logger:
+                self._logger.error('white_space_node must be terminal node')
             return extent, position, pass_fail, reserved
 
         tmp = self._white_space(text[position:])

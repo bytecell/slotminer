@@ -28,7 +28,8 @@ class node_var_condition(node):
         self._attr['right'] = right.split(',')
 
         if len(self._attr['left']) != len(self._attr['right']):
-            self._logger.error('Inconsistent # of operands for node_var_condition = {}, {}'.format(left, right))
+            if self._logger:
+                self._logger.error('Inconsistent # of operands for node_var_condition = {}, {}'.format(left, right))
 
     def process(self, text, extent, position, var, add_extent=True):
         pass_fail = False

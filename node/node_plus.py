@@ -10,7 +10,8 @@ class node_plus(node):
         pass_fail = False
         reserved = []
         if self.num_child() != 1:
-            self._logger.error('invalid # of children nodes for node_plus')
+            if self._logger:
+                self._logger.error('invalid # of children nodes for node_plus')
             return extent, position, pass_fail, reserved
 
         _extent, _position, _pass_fail, _reserved = \

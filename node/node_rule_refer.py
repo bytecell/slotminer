@@ -14,7 +14,8 @@ class node_rule_refer(node):
         pass_fail = True
         reserved = []
         if self.num_child() != 1:
-            self._logger.error('invalid # of children in node_rule_refer')
+            if self._logger:
+                self._logger.error('invalid # of children in node_rule_refer')
         else:
             # 해당 rule의 dict_tree
             rname, rcont = self._attr['rule_name'], self._children[0]

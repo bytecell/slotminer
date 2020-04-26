@@ -163,7 +163,8 @@ class rule_loader:
         if small_paren[0] == 0:
             b, e = small_paren
             if e < 0:
-                self._logger.error('small paren is not paired')
+                if self._logger:
+                    self._logger.error('small paren is not paired')
                 return None
             cur_txt = rule_phrase[b+1:e-1]
             idx_for_middle_paren = self._finder['middle_paren'](rule_phrase[e:])
@@ -219,7 +220,8 @@ class rule_loader:
             else:
                 idx_ors, idx_ordered_ors = self._finder['ors'](cur_txt)
                 if idx_ors and idx_ordered_ors:
-                    self._logger.error('|| and | appear concurrently = {}'.format(cur_txt))
+                    if self._logger:
+                        self._logger.error('|| and | appear concurrently = {}'.format(cur_txt))
                     return None
                 # | 처리
                 if idx_ors:
@@ -306,7 +308,8 @@ class rule_loader:
                 new_node = node_empty_end(self._logger)
                 cur_node.add_child(new_node)
             else:
-                self._logger.error('invalid syntax for [ ] = {}'.format(rule_phrase))
+                if self._logger:
+                    self._logger.error('invalid syntax for [ ] = {}'.format(rule_phrase))
             remain_txt = rule_phrase[e:]
         # 변수 언급
         elif var_refer and var_refer.span()[0] == 0:
@@ -338,11 +341,13 @@ class rule_loader:
                     new_node2 = self._R.get(rule_name)
                     new_node.add_child(new_node2)
                 else:
-                    self._logger.error('non-existing rule-name for rule refer = {}'.format(rule_phrase))
+                    if self._logger:
+                        self._logger.error('non-existing rule-name for rule refer = {}'.format(rule_phrase))
             remain_txt = rule_phrase[e:]
         # white-space
         elif white_space and white_space.span()[0] == 0:
-            self._logger.error('Invalid white-space = {}'.format(rule_phrase))
+            if self._logger:
+                self._logger.error('Invalid white-space = {}'.format(rule_phrase))
             return None
         # 그외 (일반 text로 취급)
         else:
@@ -367,7 +372,8 @@ class rule_loader:
 
         # 나머지 text가 있는지 체크하여 재귀호출
         if not new_node and remain_txt:
-            self._logger.error('no valid child node is generated: {}'.format(rule_phrase))
+            if self._logger:
+                self._logger.error('no valid child node is generated: {}'.format(rule_phrase))
         elif remain_txt:
             self.make_tree(rule_phrase=remain_txt, ext=ext, cur_node=cur_node)
 
@@ -393,7 +399,8 @@ class rule_loader:
             # result 부분
             result = rcont.get('result')
             if not result:
-                self._logger.error('No result in rule {}'.format(rname))
+                if self._logger:
+                    self._logger.error('No result in rule {}'.format(rname))
                 return False
             for rst_name, rst_cont in result.items():
                 if isinstance(rst_cont, int):
@@ -405,23 +412,27 @@ class rule_loader:
             # 여기부터는 condition 부분
             conds = rcont.get('condition')
             if not conds:
-                self._logger.error('No condition in rule {}'.format(rname))
+                if self._logger:
+                    self._logger.error('No condition in rule {}'.format(rname))
                 return False
             trees = []
             for cond in conds:
                 k = list(cond.keys())
                 k = k[0]
                 if 'next' not in k and 'ext' not in k:
-                    self._logger.error('Invalid condition type = {}'.format(cond))
+                    if self._logger:
+                        self._logger.error('Invalid condition type = {}'.format(cond))
                     return False
                 c = cond.get(k)
                 c = c.strip()
                 if not c:
-                    self._logger.error('Only white-spaces in condition = {}'.format(cond))
+                    if self._logger:
+                        self._logger.error('Only white-spaces in condition = {}'.format(cond))
                     return False
                 t = self.make_tree(c, k)
                 if not t:
-                    self._logger.error('Tree generation failed')
+                    if self._logger:
+                        self._logger.error('Tree generation failed')
                     return False
                 trees.append(t)
             rcont['condition'] = trees

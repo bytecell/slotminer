@@ -10,7 +10,8 @@ class node_all_letter(node):
         pass_fail = False
         reserved = []
         if self.num_child():
-            self._logger.error('all_letter_node must be terminal node')
+            if self._logger:
+                self._logger.error('all_letter_node must be terminal node')
             return extent, position, pass_fail, reserved
 
         if position >= len(text):

@@ -13,7 +13,8 @@ class node_freq(node):
         pass_fail = False
         reserved = []
         if self.num_child() != 1:
-            self._logger.error('invalid # of children nodes for node_freq')
+            if self._logger:
+                self._logger.error('invalid # of children nodes for node_freq')
             return extent, position, pass_fail, reserved
 
         _extent = extent.copy()

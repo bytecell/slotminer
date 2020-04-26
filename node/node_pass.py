@@ -7,7 +7,8 @@ class node_pass(node):
 
     def process(self, text, extent, position, var, add_extent=True):
         if self.num_child() != 1:
-            self._logger.error('invalid # of children for node_pass')
+            if self._logger:
+                self._logger.error('invalid # of children for node_pass')
             _extent = extent
             _position = position
             reserved = []

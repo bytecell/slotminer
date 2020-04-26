@@ -27,7 +27,8 @@ class node_var_refer(node):
         if digit:
             b, e = digit.span()
             if e < len(func) or b != 0:
-                self._logger.error('Invalid var_funct = {}'.format(func))
+                if self._logger:
+                    self._logger.error('Invalid var_funct = {}'.format(func))
                 return extent, position, pass_fail, reserved
             digit = int(func)
             for i in range(digit):

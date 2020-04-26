@@ -16,10 +16,12 @@ class node_not_match_text(node):
             return extent, position, True, [self._attr['target_text']]
 
         if self.num_child():
-            self._logger.error('(not)match_text_node must be terminal node')
+            if self._logger:
+                self._logger.error('(not)match_text_node must be terminal node')
             return extent, position, pass_fail, reserved
         if not self._attr.get('target_text'):
-            self._logger.error('empty (not)target_text')
+            if self._logger:
+                self._logger.error('empty (not)target_text')
             return extent, position, pass_fail, reserved
 
         target_text = self._attr['target_text']
