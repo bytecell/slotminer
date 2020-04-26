@@ -121,7 +121,6 @@ class rule_process:
         i = 0
         while i < len(ext1)-1:
             left_end = ext1[i][1]
-            print('left_end = ', left_end, i, len(ext1))
             right_begin = ext1[i+1][0]
             if right_begin - left_end == 1 and text[left_end] == ' ':
                 ext1.add((left_end, left_end+1))
