@@ -1,0 +1,423 @@
+{
+	"R0-9": {
+		"name": "slot_number",
+		"result": {"value": "[$s]"},
+		"condition": [
+			{"ext": "[$s=(0|1|2|3|4|5|6|7|8|9|.)]"}
+		]
+	},
+	"Rnumber": {
+		"name": "slot_number",
+		"result": {"value": "[$s]"},
+		"condition": [
+			{"ext": "[$s=([@R0-9.value]){1,}]"}
+		]
+	},
+	"Rcopd": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](copd|asthma|bronchiectasis|emphysema)[$s=copd]"}
+		]
+	},
+	"Rbedridden": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<]bedridden[$s=bedridden]"}
+		]
+	},
+	"Rcpr": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](cpr|cardiac([ ])?arrest|arrest)[$s=cpr]"}
+		]
+	},
+	"Ralcoholic_hepatitis": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<]alcoholic(hepatitis|liver([ ])?disease)[$s=alcoholic_hepatitis]"}
+		]
+	},
+	"Ralcoholic_lc": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](alcoholic(liver([ ])?cirrhosis|lc)|liver([ ])?cirrhosis|lc[>])[$s=alcoholic_lc]"}
+		]
+	},
+	"Ripf": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](ipf[>]|pul.fibrosis|pulmonary([ ])?fibrosis)[$s=ipf]"}
+		]
+	},
+	"Ranemia": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](anemia[>]|ida[>])[$s=anemia]"}
+		]
+	},
+	"Rmyocardial_infarction": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](myocardial([ ])?infarction|(mi|ami|nstemi|stemi)[>])[$s=myocardial_infarction]"}
+		]
+	},
+	"Rpci": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<]((pci|des|bms)[>]|coronary([ ])?stent)[$s=pci]"}
+		]
+	},
+	"Ratherosclerosis": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<]atherosclerosis[$s=atherosclerosis]"}
+		]
+	},
+	"Rdvt": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](dvt[>])[$s=dvt]"}
+		]
+	},
+	"Rcarotid_artery_stenosis": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<]((carotid|caritid)()?(artery|a.)()?stenosis)[$s=carotid_artery_stenosis]"}
+		]
+	},
+	"Rcerebral_atherosclerosis": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](cerebral([ ])?atherosclerosis)[$s=cerebral_atherosclerosis]"}
+		]
+	},
+	"Resrd_kt": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](esrd([ ])?(on|s/p)([ ])?kt|kt([ ])?(transplant)?state|kideny([ ])?transplant([ ])?state)[$s=esrd_kt]"}
+		]
+	},
+	"Rhyperparathyroidism": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](hyperparathyroidism)[$s=hyperparathyroidism]"}
+		]
+	},
+	"Rcad": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](cad|caod)[>][$s=cad]"}
+		]
+	},
+	"Rcad_1": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](cv1d|c1vd)[$s=cad1]"}
+		]
+	},
+	"Rcad_2": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](cv2d|c2vd)[$s=cad2]"}
+		]
+	},
+	"Rcad_3": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](cv3d|c3vd)[$s=cad3]"}
+		]
+	},
+	"Rfatty_liver": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](fatty([ ])?liver)[$s=fatty_liver]"}
+		]
+	},
+	"Rangina": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](angina)[$s=angina]"}
+		]
+	},
+	"Rvpc": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](vpc|pvc)[>][$s=vpc]"}
+		]
+	},
+	"Rapc": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](apc|pac)[>][$s=apc]"}
+		]
+	},
+	"Rchf": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](right[$s=chf_right]|[$s=chf])(chf|(congestive)?hf|(congestive)?heart([ ])?failure)[>]"}
+		]
+	},
+	"Rmr": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](mild[$s=mr_mild]|moderate[$s=mr_moderate]|severe[$s=mr_severe]|trivial[$s=mr_trivial]|[$s=mr])(mr|mvr|mitral([ ])?valve?([ ])?regurgitation|mv([ ])?regurgitation)"}
+		]
+	},
+	"Rms": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](mild[$s=ms_mild]|moderate[$s=ms_moderate]|severe[$s=ms_severe]|[$s=ms])(ms[>]|mitral([ ])?valve([ ])?stenosis|rheumatic([ ])?ms|degenerative([ ])?ms)"}
+		]
+	},
+	"Rhtn": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](htn[>]|hypertension|고혈압)[$s=htn]"}
+		]
+	},
+	"Rpulmonary_hypertension": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](mild[$s=pulmonary_hypertension_mild]|moderate[$s=pulmonary_hypertension_moderate]|severe[$s=pulmonary_hypertension_severe]|[$s=pulmonary_hypertension])((pulmonary|pul)([ ])?hypertension|ph[>]|pul(.)?([ ])?htn)"}
+		]
+	},
+	"Rpulmonary_embolism": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](pulmonary([ ])?embolism|pte[>]|pulmonary([ ])?thromboembolism)[$s=pulmonary_embolism]"}
+		]
+	},
+	"Rtr": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](mild[$s=tr_mild]|moderate[$s=tr_moderate]|severe[$s=tr_severe]|trivial[$s=tr_trivial]|[$s=tr])(tr[>]|tvr[>]|tricuspid([ ])?(valve)?([ ])?regurgitation|tv([ ])?regurgitation)"}
+		]
+	},
+	"Rdm": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](dm[>]|diabetes([ ])?mellitus)[$s=dm]"}
+		]
+	},
+	"Rdiastolic_dysfunction": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](diastolic([ ])?dysfunction|pseudonormalization([ ])?of([ ])?lv([ ])?filling([ ])?pattern|e/a([ ])?reverse|e/a([ ])?<([ ])?1|increased([ ])?dt|relaxation([ ])?abnormality)[$s=diastolic_dysfunction]"}
+		]
+	},
+	"Rconcentric_lvh": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](concentric(lvh|lv(wall([ ])?thickening|remodeling|hypertrophy)))[$s=concentric_lvh]"}
+		]
+	},
+	"Reccentric_lvh": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](eccentric(lvh|lv([ ])?hypertrophy))[$s=eccentric_lvh]"}
+		]
+	},
+	"Rhcmp": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](hcmp[>]|hypertrop(h)?ic([ ])?cardiomyopathy|hypertrop(h)?ic([ ])?cmp)[$s=hcmp]"}
+		]
+	},
+	"Rlae": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](lae[>]|enlarged([ ])?la([ ])?chamber([ ])?size|la([ ])?enlarge|bae[>])[$s=lae]"}
+		]
+	},
+	"Rrae": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](rae[>]right([ ])?atrial([ ])?enlarge|ra()?enlarge|enlarged([ ])?ra([ ])?chamber([ ])?size|bae[>])[$s=rae]"}
+		]
+	},
+	"Rlve": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](lve[>]|lv([ ])?enlarge|enlarged([ ])?lv([ ])?chamber([ ])?size)[$s=lve]"}
+		]
+	},
+	"Rrve": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](rve[>]|rv([ ])?enlarge|enlarged([ ])?rv([ ])?chamber([ ])?size|enlarged([ ])?ra([ ])?&([ ])?rv([ ])?chamber([ ])?size)[$s=rve]"}
+		]
+	},
+	"Rischemic_heart_disease": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](ischemic([ ])?heart([ ])?disease|ihd[>]|cad[>])[$s=ischemic_heart_disease]"}
+		]
+	},
+	"Rregional_wall_motion_abnormality": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"next": "(no)!"},
+			{"ext": "(regional([ ])?wall([ ])?motion([ ])?abnormality|rwma[>])[$s=regional_wall_motion_abnormality]"}
+		]
+	},
+	"Rlv_systolic_dysfunction": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](mild[$s=lv_systolic_dysfunction_mild]|moderate[$s=lv_systolic_dysfunction_moderate]|severe[$s=lv_systolic_dysfunction_severe]|[$s=lv_systolic_dysfunction])(lv([ ])?systolic([ ])?dysfunction|lv([ ])?dysfunction|hypokinesia|akinesia)"}
+		]
+	},
+	"Rrv_dysfunction": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](rv([ ])?dysfunction)[$s=rv_dysfunction]"}
+		]
+	},
+	"Ra_fib": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](a-fib|af[>])[$s=a_fib]"}
+		]
+	},
+	"Rdcmp": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](dcmp|increased([ ])?lv([ ])?dimension)(with([ ])?lv([ ])?systolic[$s=dcmp_w_systolic_dysfunction]|without([ ])?lv([ ])?systolic[$s=dcmp_wo_systolic_dysfunction]|[>][$s=dcmp])"}
+		]
+	},
+	"Ras": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](mild[$s=as_mild]|moderate[$s=as_moderate]|severe[$s=as_severe]|[$s=as])(aortic([ ])?valve([ ])?stenosis|rheumatic([ ])?as)"}
+		]
+	},
+	"Rar": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](mild[$s=ar_mild]|moderate[$s=ar_moderate]|severe[$s=ar_severe]|trivial[$s=ar_trivial]|[$s=ar])(aortic([ ])?regurgitation)"}
+		]
+	},
+	"Ruremic_cmp": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](uremic([ ])?cmp)(with([ ])?lv([ ])?systolic[$s=uremic_cmp_w_lv_systolic_dysfunction]|without([ ])?lv([ ])?systolic[$s=uremic_cmp_wo_lv_systolic_dysfunction]|[$s=uremic_cmp])"}
+		]
+	},
+	"Rivc_plethora": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](ivc([ ])?plethora)[$s=ivc_plethora]"}
+		]
+	},
+	"Rpericardial_effusion": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](large([ ])?amount([ ])?(of)?[$s=pericardial_effusion_large_amount]|small([ ])?amount([ ])?(of)?[$s=pericardial_effusion_small_amount]|[$s=pericardial_effusion])(pericardial([ ])?effusion)"}
+		]
+	},
+	"Rpleural_effusion": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](large([ ])?amount([ ])?(of)?[$s=pleural_effusion_large_amount]|small([ ])?amount([ ])?(of)?[$s=pleural_effusion_small_amount]|[$s=pleural_effusion])(pleural([ ])?effusion)"}
+		]
+	},
+	"Rdepression": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](depression|mdd[>]|depressive([ ])?(disorder|episode)|우울증)[$s=depression]"}
+		]
+	},
+	"Rcancer": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](cancer|ca.)[>][$s=cancer]"}
+		]
+	},
+	"Rglucose": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]:[$s0]"},
+		"condition": [
+			{"ext": "[<](glucose([ ])?:)[$s0=([@Rnumber.value])][>][$s=glucose]"}
+		]
+	},
+	"Rabga": {
+		"name": "slot_param1",
+		"result": {"feature": "abga_0:[$s0]:abga_1:[$s1]:abga_2:[$s2]:abga_3:[$s3]:abga_4:[$s4]"},
+		"condition": [
+			{"ext": "[<]abga([ ])?:([ ])?[$s0=([@Rnumber.value])]-[$s1=([@Rnumber.value])]-[$s2=([@Rnumber.value])]-[$s3=([@Rnumber.value])]-[$s4=([@Rnumber.value])]"}
+		]
+	},
+	"Regfr": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]:[$s0]"},
+		"condition": [
+			{"ext": "[<](egfr([ ])?:)[$s0=([@Rnumber.value])][>][$s=egfr]"}
+		]
+	},
+	"Rcag": {
+		"name": "slot_param1",
+		"result": {"feature": "[$s]"},
+		"condition": [
+			{"ext": "[<](cag([ ])?:)(c1vd[$s=cag_1]|c2vd[$s=cag_2]|c3vd[$s=cag_3]|insignificant[$s=cag_insignificant]|normal[$s=cag_normal]|[$s=cag])"}
+		]
+	},
+	"Rtft": {
+		"name": "slot_param1",
+		"result": {"feature": "ft4:[$s0]:t3:[$s1]"},
+		"condition": [
+			{"ext": "(ft4/t3)([ ])?[$s=([@Rnumber.value])]([.]){3}/[$s0=([@Rnumber.value])]([.]){3}/[$s1=([@Rnumber.value])]"}
+		]
+	}
+}
