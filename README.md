@@ -5,6 +5,7 @@
 
 - 질의응답 시스템
 - 대화시스템 (챗봇)
+- 텍스트 전처리 및 슬롯(slot) 추출
 
 # 설치 방법
 
@@ -25,6 +26,9 @@ PYTHON_PATH=$PYTHON_PATH:$SLOTMINER
 
 아래와 같이 쉘창에서 테스트를 실행 가능하다.
 사용자가 직접 규칙 파일을 작성한 후, test.py 내용을 참고하여 다른 어플리케이션 또는 서비스에 사용할 수 있다.
+텍스트에 대하여 규칙을 체크할 때, Tree(트리) 기반으로 recursive call으로써 규칙을 체크하기 때문에 너무 긴 텍스트에 대해서는 '콜스택 오버플로우' 등의 에러가 발생할 수 있으므로 유의해야 한다.
+따라서, test.py 내용을 참고하여 너무 긴 텍스트는 적당한 길이(예: 100~500글자 사이)로 잘라서 사용하는 것을 권장한다.
+또한, 영어 알파벳 텍스트에 적용할 경우에는 소문자화하여 규칙을 체크하도록 한다.
 
 ```
 ~/slotminer$ python3 test.py
@@ -68,10 +72,13 @@ PYTHON_PATH=$PYTHON_PATH:$SLOTMINER
 특히, `1999년`, `다음주 수요일`과 같은 표현(이를 TIMEX3 slot 이라고 부른다)에 대한 추출 및 정규화는 규칙을 기반으로 추출하는 것이 더 효과적이라 할 수 있다.
 기본적으로는 ISO-8601과 ISO-TimeML 표준을 따르지만, [Y.S. Jeong et al., 2016](http://www.lrec-conf.org/proceedings/lrec2016/pdf/175_Paper.pdf) 논문에서 언급하듯이, 실제 프로그램 상에서는 위 두개의 표준을 그대로 따르게 되면 매우 비효율적이거나 표현하지 못하는 시간 정보들이 존재한다.
 따라서, [Y.S. Jeong et al., 2016](http://www.lrec-conf.org/proceedings/lrec2016/pdf/175_Paper.pdf) 논문과 [C.G. Lim et al., 2018](http://aclweb.org/anthology/L18-1326) 논문에서 제시하는 새로운 Korean TimeML을 반영하여 시간정보를 추출한다.
+이 기능을 위한 규칙파일은 `rule/timex3.rule` 이다. 
 
 특히, 시간정보 중에서 EVENT, MAKEINSTANCE, TLINK 등은 제외하고, TIMEX3 에서도 주로 사용되는 표현 외에는 과감히 제외하였다.
 예를 들면, 추출되는 정보를 불필요하게 번잡하게 만드는 'SET' 타입 TIMEX3는 제외되었다.
 추출되는 TIMEX3 정보에 대한 정의는 아래와 같다.
+만약 기업/기관에서 사용하려는 별도의 시간정보를 추가하는 작업을 의뢰하고 싶다면 본문 맨 밑에 적혀있는 제휴문의를 참고바란다.
+
 
 ```python
 attributes ::= type text extent calendar [year] [month] [day] [week] [week_day] [mod] 
@@ -92,6 +99,30 @@ week_day ::= 0 | 1 | 2 | 3 | 4 | 5 | 6
 mark ::= 'P' | '+' | '-' | '_' (Note: '_'는 '기원전' 표현 전용)
 mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
 ```
+
+## 기능2: 병원 마취전 평가서 텍스트로부터 정형화된 정보 추출
+
+병원에서 수술을 앞둔 시점에 '평가서'를 작성하는데, 이 평가서에는 환자의 상태, 특징 등의 정보를 담고 있으므로 여러가지로 활용(예: 환자의 수술후 예후 예측 등)이 가능하다.
+하지만, 이 평가서는 자연어 문장의 나열로써 작성되기 때문에 평가서로부터 정형화된 정보를 추출하는 작업이 필요하다.
+이 기능은 임상 의료인이 수술전에 작성하는 평가서 텍스트로부터 정형화된 정보를 추출해준다.
+
+```python
+attributes ::= name feature text extent 
+name ::= 'slot_param1'
+feature ::= CDATA
+text ::= CDATA
+extent ::= [(begin, end), ...]
+begin ::= CDATA {begin ::= <integer>}
+end ::= CDATA {end ::= <integer>}
+```
+
+기본적으로는 `순천향대학교 서울병원`(https://www.schmc.ac.kr/seoul/index.do)에서 사용되는 전문용어/약어를 기준으로 규칙이 작성되었으며, 다른 병원 및 기관에서는 다소의 용어 차이가 존재할 수 있다.
+`feature`항목의 값은 약 50가지 이상의 전문용어/약어가 평가서에 존재하는지 여부를 나타내며, 때때로 수치값(예: glucose:50)을 추출해주기도 한다.
+추출되는 용어/약어들에 대한 목록은 아래와 같다.
+만약 병원/기관에서 사용하는 별도의 용어들을 추가하는 작업을 의뢰하고 싶다면 본문 맨 밑에 적혀있는 제휴문의를 참고바란다.
+
+- COPD, Bedridden, CPR, Alcoholic hepatitis, Alcoholic LC, IPF, Anemia, Myocardial infarction, PCI, Atherosclerosis, DVT, Carotid artery stenosis, Cerebral atherosclerosis, ESRD KT, Hyperparathyroidism, CAD, Fatty liver, Angina, VPC, APC, CHF, MR, MS, HTN, Pulmonary hypertension, Pulmonary embolism, TR, DM, Diastolic dysfunction, Concentric LVH, Eccentric LVH, HCMP, LAE, RAE, LVE, RVE, Ischemic heart disease, Regional wall motion abnormality, LV systolic dysfunction, RV dysfunction, A.fib, DCMP, AS, AR, Uremic CMP, IVC plethora, Pericardial effusion, Pleural effusion, Depression, Cancer, Glucose, aBGA, EGFR, CAG, TFT  
+
 
 
 # 규칙 작성 방법
@@ -134,7 +165,7 @@ mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
    사용가능한 표현들은 +, ?, | 이다.
    이 표현들은 소괄호와 항상 함께 써야 한다. 예를 들어, (a)+ 이라고 하면, a 문자 1개 이상을 의미한다.
    기본적으로 공백은 무시하도록 되어있는데, 만약 공백을 체크하고 싶을 경우에는 [ ] 이라고 기술하면 된다.
-   문장의 맨 첫 부분임을 체크하고 싶은 경우, [^] 이라고 기술할 수 있다.
+   문장의 맨 처음이거나 white-space(' ', '\t' 등)인 경우는 [<] 이라고 기술할 수 있으며, 문장의 맨 끝이거나 white-space인 경우는 [>]이라고 기술한다.
    
    ```python
    "Rule" : {
@@ -271,25 +302,26 @@ mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
    
    각 조건의 키는 `ext` 또는 `next`중에 하나만을 가질 수 있으며, 조건을 체크하면서도 원하는 부분만 결과물 텍스트 범위에 포함할 수 있게 된다.
 
-8. 규칙 작성 방법 (중급레벨 III)
-
-   TBD   
-  
-
 
 # 라이센스, 제휴
 
 연구, 비영리 사업 목적에 해당하는 경우, 본 프로젝트를 자유롭게 사용할 수 있다.
-단, 아래의 항목들 중에 적어도 1개를 해당 사업 또는 연구논문에 reference 로 추가하는 조건 하에 사용할 수 있다.
+단, 각 기능에 대하여 아래의 항목들 중에 적어도 1개를 해당 사업 또는 연구논문에 reference 로 추가하는 조건 하에 사용할 수 있다.
+
+## 기능1: 시간정보추출
 
 - [Y.S. Jeong et al., 2016](http://www.lrec-conf.org/proceedings/lrec2016/pdf/175_Paper.pdf)
 - [C.G. Lim et al., 2018](http://aclweb.org/anthology/L18-1326)
 - [Y.S. Jeong et al., 2017](http://www.dbpia.co.kr/Journal/ArticleDetail/NODE07286957)
 - [Y.S. Jeong et al., 2015](http://aclweb.org/anthology/K15-1028)
 
-특히, 아래 두 가지에 해당되는 경우에는 본 프로젝트 책임자(pinodewaider@gmail.com)에게 연락하여 제휴/제안을 논의할 수 있다.
+## 기능2: 병원 마취전 평가서 텍스트로부터 정형화된 정보 추출
+
+- [H. Kim et al., 2019](https://www.mdpi.com/2076-3417/10/3/1151)
+
+특히, 아래 두 가지에 해당되는 경우에는 본 프로젝트 책임자( pinodewaider_at_gmail.com )에게 연락하여 제휴/제안을 논의할 수 있다.
 
 1. slotminer 프로젝트를 영리 사업에 활용하고자 하는 경우
-   - 연구, 비영리 사업에는 무료로 사용 가능
+   - 연구, 비영리 사업에는 무료로 사용 가능(단, 위의 각 기능 별로 1개 이상의 reference 명시)
 2. 향상된 버전(예: 시간정보 추출 규칙파일 공개버전보다 향상된 버전)을 필요로 하는 경우
    - 본프로젝트에서 제공되는 기능은 누구나 이용 가능하지만, 책임자가 직접 관리하는 `향상된 버전의 규칙 파일`은 open 되어있지 않으며, 이 파일을 얻고 싶은 경우
