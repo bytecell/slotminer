@@ -34,29 +34,6 @@ PYTHON_PATH=$PYTHON_PATH:$SLOTMINER
 ~/slotminer$ python3 test.py
 ```
 
-# 실행 예시
-```python
-원본: 3년 5개월동안
-결과:
-{'year': 'P3', 'type': 'DURATION', 'month': 'P5', 'calendar': 'GREGORIAN', 'text': '3년 5개월', 'name': 'slot_timex3', 'extent': [(0, 6)]}
-
-원본: 여자친구와 다음주 수요일에 만나기로 했다.
-결과:
-{'name': 'slot_timex3', 'week_day': '3', 'extent': [(6, 13)], 'calendar': 'GREGORIAN', 'type': 'DATE', 'text': '다음주 수요일', 'week': '+1'}
-```
-
-# 규칙 예시
-```python
-        "Rweek_day": {
-                "name": "slot_timex3",
-                "result": {"week_day": "[$s]", "type": "DATE", "calendar": "GREGORIAN"},
-                "condition": [
-                        {"ext": "(월[$s=1]|화[$s=2]|수[$s=3]|목[$s=4]|금[$s=5]|토[$s=6]|일[$s=0])요일"}
-                ]
-        },
-
-```
-
 # 기능
 
 기본적으로는 다양한 형태의 `slot을 추출`하도록 설계되었으며, 규칙 파일에서 추출 규칙들을 정의함으로써 기능 확장이 가능하다.
@@ -100,6 +77,29 @@ mark ::= 'P' | '+' | '-' | '_' (Note: '_'는 '기원전' 표현 전용)
 mod ::= 'START' | 'MID' | 'END' | 'START_MID' | 'MID_END'
 ```
 
+### 실행 예시
+```python
+원본: 3년 5개월동안
+결과:
+{'year': 'P3', 'type': 'DURATION', 'month': 'P5', 'calendar': 'GREGORIAN', 'text': '3년 5개월', 'name': 'slot_timex3', 'extent': [(0, 6)]}
+
+원본: 여자친구와 다음주 수요일에 만나기로 했다.
+결과:
+{'name': 'slot_timex3', 'week_day': '3', 'extent': [(6, 13)], 'calendar': 'GREGORIAN', 'type': 'DATE', 'text': '다음주 수요일', 'week': '+1'}
+```
+
+### 규칙 예시
+```python
+        "Rweek_day": {
+                "name": "slot_timex3",
+                "result": {"week_day": "[$s]", "type": "DATE", "calendar": "GREGORIAN"},
+                "condition": [
+                        {"ext": "(월[$s=1]|화[$s=2]|수[$s=3]|목[$s=4]|금[$s=5]|토[$s=6]|일[$s=0])요일"}
+                ]
+        },
+
+```
+
 ## 기능2: 병원 마취전 평가서 텍스트로부터 정형화된 정보 추출
 
 병원에서 수술을 앞둔 시점에 '평가서'를 작성하는데, 이 평가서에는 환자의 상태, 특징 등의 정보를 담고 있으므로 여러가지로 활용(예: 환자의 수술후 예후 예측 등)이 가능하다.
@@ -117,12 +117,36 @@ end ::= CDATA {end ::= <integer>}
 ```
 
 기본적으로는 `순천향대학교 서울병원`(https://www.schmc.ac.kr/seoul/index.do)에서 사용되는 전문용어/약어를 기준으로 규칙이 작성되었으며, 다른 병원 및 기관에서는 다소의 용어 차이가 존재할 수 있다.
-`feature`항목의 값은 약 50가지 이상의 전문용어/약어가 평가서에 존재하는지 여부를 나타내며, 때때로 수치값(예: glucose:50)을 추출해주기도 한다.
+결과물로 생성되는 slot들 중에 'name' 값이 'slot_number'로써 생성되는 slot들은 단순숫자표현만을 인지하므로 무시하도록 한다.
+숫자표현을 인식하는 이유는 glucose, TFT 등과 같이 수치값을 추출하는 용어에 대한 처리를 위함이다.
+따라서 'name'값이 'slot_param1'인 slot에 대하여, `feature`항목의 값은 약 50가지 이상의 전문용어/약어에 대한 정보를 담게 된다.
+이 정보는 특정 용어/약어가 평가서에 존재하는지 여부를 나타내며, 때때로 수치값(예: glucose:50)을 추출해주기도 한다.
 추출되는 용어/약어들에 대한 목록은 아래와 같다.
 만약 병원/기관에서 사용하는 별도의 용어들을 추가하는 작업을 의뢰하고 싶다면 본문 맨 밑에 적혀있는 제휴문의를 참고바란다.
 
 - COPD, Bedridden, CPR, Alcoholic hepatitis, Alcoholic LC, IPF, Anemia, Myocardial infarction, PCI, Atherosclerosis, DVT, Carotid artery stenosis, Cerebral atherosclerosis, ESRD KT, Hyperparathyroidism, CAD, Fatty liver, Angina, VPC, APC, CHF, MR, MS, HTN, Pulmonary hypertension, Pulmonary embolism, TR, DM, Diastolic dysfunction, Concentric LVH, Eccentric LVH, HCMP, LAE, RAE, LVE, RVE, Ischemic heart disease, Regional wall motion abnormality, LV systolic dysfunction, RV dysfunction, A.fib, DCMP, AS, AR, Uremic CMP, IVC plethora, Pericardial effusion, Pleural effusion, Depression, Cancer, Glucose, aBGA, EGFR, CAG, TFT  
 
+### 실행 예시
+```python
+원본:  TFT : TSH/fT4/T3 3.66(N)/1.26(N)/60.03(L)
+결과:
+{'text': 'fT4/T33.66(N)/1.26(N)/60.03', 'name': 'slot_param1', 'feature': 'ft4:1.26:t3:60.03', 'extent': [(10, 37)]}
+
+원본:  Chest CT :. Diffuse tubular bronchiectasis and multiple small subsolid/solid 
+결과: 
+{'text': 'bronchiectasis', 'name': 'slot_param1', 'feature': 'copd', 'extent': [(60, 74)]}
+```
+
+### 규칙 예시
+```python
+        "Rtft": {
+                "name": "slot_param1",
+                "result": {"feature": "ft4:[$s0]:t3:[$s1]"},
+                "condition": [
+                        {"ext": "(ft4/t3)([ ])?[$s=([@Rnumber.value])]([.]){3}/[$s0=([@Rnumber.value])]([.]){3}/[$s1=([@Rnumber.value])]"}
+                ]
+        }
+```
 
 
 # 규칙 작성 방법
