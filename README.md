@@ -117,9 +117,11 @@ end ::= CDATA {end ::= <integer>}
 ```
 
 기본적으로는 `순천향대학교 서울병원`(https://www.schmc.ac.kr/seoul/index.do)에서 사용되는 전문용어/약어를 기준으로 규칙이 작성되었으며, 다른 병원 및 기관에서는 다소의 용어 차이가 존재할 수 있다.
-결과물로 생성되는 slot들 중에 'name'값이 'slot_number'로써 생성되는 slot들은 단순숫자표현만을 인지하므로 무시하도록 한다.
+규칙파일 경로는 `rule/sch_seoul.rule` 이다.
 
+결과물로 생성되는 slot들 중에 'name'값이 'slot_number'로써 생성되는 slot들은 단순숫자표현만을 인지하므로 무시하도록 한다.
 숫자표현을 인식하는 이유는 glucose, TFT 등과 같이 수치값을 추출하는 용어에 대한 처리를 위함이다.
+
 따라서 'name'값이 'slot_param1'인 slot에 대하여, `feature`항목의 값은 약 50가지 이상의 전문용어/약어에 대한 정보를 담게 된다.
 이 정보는 특정 용어/약어가 평가서에 존재하는지 여부를 나타내며, 때때로 수치값(예: glucose:50)을 추출해주기도 한다.
 
@@ -343,7 +345,7 @@ end ::= CDATA {end ::= <integer>}
 
 ## 기능2: 병원 마취전 평가서 텍스트로부터 정형화된 정보 추출
 
-- [H. Kim et al., 2019](https://www.mdpi.com/2076-3417/10/3/1151)
+- [H. Kim et al., 2020](https://www.mdpi.com/2076-3417/10/3/1151)
 
 특히, 아래 두 가지에 해당되는 경우에는 본 프로젝트 책임자( pinodewaider_at_gmail.com )에게 연락하여 제휴/제안을 논의할 수 있다.
 
