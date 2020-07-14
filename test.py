@@ -22,8 +22,11 @@ rl.print_rules()
 # 규칙 '수행(실행)' 객체 생성
 rp = rule_process(rules=rl.get_rules(), logger=logger)
 
+# 규칙에 대한 indexing
+rp.indexing()
+
 while True:
-    text = input()
+    text = input('Test input>')
     # 빈 줄 입력시 종료
     if not text:
         break
