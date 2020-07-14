@@ -8,7 +8,10 @@ class rule_process:
     #_VAR_NAME_ = re.compile('\[.+?\]').match
 
     def __init__(self, rules, logger):
-        self._rules = rules
+        self._rules = OrderedDict()
+        for rname, rcont in rules:
+            self._rules[rname] = rcont
+        
         self._logger = logger
 
         self._input2rule = OrderedDict()
@@ -94,7 +97,7 @@ class rule_process:
         if not self._rules:
             return False
         ret = True
-        for rule_index, (rule_name, rule) in enumerate(self._rules):
+        for rule_index, (rule_name, rule) in enumerate(self._rules.items()):
             if self._logger:
                 self._logger.info('Indexing {}: {}'.format(rule_index, rule_name))
             rule_condition = rule.get('condition')
@@ -173,43 +176,60 @@ class rule_process:
  
     def process(self, text, extent=extent(), position=0, variables=None,
             cur_node=None, indexing=False):
-        # indexing 알아보기
+        # indexing
         rule_cands = []
-        for rname, rcont in self._rules:
-            rule_cands.append((rname, rcont))
+        if indexing:
+            k = text[position]
+            rule_cands = self._input2rule.get(k)
+            if self._input2rule[None]:
+                v = self._input2rule[None]
+                if v:
+                    for _v in v:
+                        if _v not in rule_cands:
+                            rule_cands += [_v]
+        else:
+            for rname in self._rules.keys():
+                rule_cands += [rname]
 
         if not variables:
             variables = var(self._logger)
 
         if self._logger:
             self._logger.info('현재 고려중인 놈 = {}'.format(text[position]))
+            self._logger.info('Rules by indexing = {}'.format(rule_cands))
 
         matched = []
 
         # 적용하기 (일부러 맨 뒤 규칙부터 적용)
         result = []
-        rule_cands.reverse()
-        for rname, rcont in rule_cands:
-            if self._logger:
-                self._logger.info('고려하는 규칙 = {}'.format(rname))
-            pass_fail, _result, _extent, _position = rule_process._process(\
-                rname, rcont, text, extent, position, variables, self._logger)
-            if pass_fail:
+        if rule_cands:
+            rule_cands.reverse()
+            for rname in rule_cands:
+                rcont = self._rules[rname]
                 if self._logger:
-                    x = '[*] 매칭된 규칙 = {}, extent = {}'.format(rname, _extent)
-                    self._logger.info(x)
-                result += _result
-                matched += [rname]
-                break
-
-        if not pass_fail:
-            _position = position + 1
+                    self._logger.info('고려하는 규칙 = {}'.format(rname))
+                pass_fail, _result, _extent, _position = rule_process._process(\
+                    rname, rcont, text, extent, position, variables, self._logger)
+                if pass_fail:
+                    if self._logger:
+                        x = '[*] 매칭된 규칙 = {}, extent = {}'.format(rname, _extent)
+                        self._logger.info(x)
+                    result += _result
+                    matched += [rname]
+                    break
+    
+            if not pass_fail:
+                _position = position + 1
+            else:
+                # _position 은 이미 업데이트되어있을 것임
+                pass
         else:
-            # _position 은 이미 업데이트되어있을 것임
-            pass
+            _position = position + 1
 
         if _position < len(text):
-            _result, variables, _matched = self.process(text, extent, _position, variables, cur_node)
+            _result, variables, _matched = self.process(
+                    text, extent, _position,
+                    variables, cur_node, indexing)
             result += _result
             matched += _matched
 

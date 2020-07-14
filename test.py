@@ -24,6 +24,7 @@ rp = rule_process(rules=rl.get_rules(), logger=logger)
 
 # 규칙에 대한 indexing
 rp.indexing()
+use_indexing = True
 
 while True:
     text = input('Test input>')
@@ -31,7 +32,7 @@ while True:
     if not text:
         break
     start_time = time.time()
-    result, variables, matched = rp.process(text)
+    result, variables, matched = rp.process(text, indexing=use_indexing)
     result = rp.merge_slot(result, text, rl.get_policy())
     end_time = time.time()
     print('원본:', text)
