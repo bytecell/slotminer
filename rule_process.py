@@ -1,5 +1,6 @@
 from var import var
 from extent import extent
+from collections import OrderedDict
 import re
 import pdb
 
@@ -10,8 +11,112 @@ class rule_process:
         self._rules = rules
         self._logger = logger
 
+        self._input2rule = OrderedDict()
+        self._rule2input = OrderedDict()
+        # 예외적으로, None 키는 모든 경우(모든 입력)를 가리키는 것으로 가정
+        self._input2rule[None] = []
+
         #self._finder = dict()
         #self._finder['var_name'] = rule_process._VAR_NAME_
+
+    def _indexing_add(self, k, v):
+        if k not in self._input2rule.keys():
+            self._input2rule[k] = []
+        if v not in self._input2rule[k]:
+            self._input2rule[k] += [v]
+        
+        if v not in self._rule2input.keys():
+            self._rule2input[v] = []
+        if k not in self._rule2input[v]:
+            self._rule2input[v] += [k]
+
+    def _indexing(self, n, rule_name):
+        if n._type == 'MATCH_TEXT':
+            k = n._attr['target_text'][0]
+            v = rule_name
+            self._indexing_add(k, v)
+            return True
+        elif n._type == '(NOT)MATCH_TEXT':
+            k = None
+            v = rule_name
+            self._indexing_add(k, v)
+            return True
+        elif n._type == 'OR' or n._type == 'ORDERED_OR':
+            ret = False
+            for cnode in n._children:
+                if self._indexing(cnode, rule_name):
+                    ret = True
+            return ret
+        elif n._type == 'AND' or n._type == 'CONCAT':
+            for cnode in n._children:
+                if self._indexing(cnode, rule_name):
+                    return True
+            return False
+        elif n._type == '?':
+            for cnode in n._children:
+                if self._indexing(cnode, rule_name):
+                    break
+            return False
+        elif n._type[0] == '+':
+            return self._indexing(n._children[0], rule_name)
+        elif n._type[0] == 'PASS':
+            return self._indexing(n._children[0], rule_name)
+        elif n._type[0] == '{' and n._type[-1] == '}':
+            return self._indexing(n._children[0], rule_name)
+        elif n._type == 'ALL_LETTER':
+            k = None
+            v = rule_name
+            self._indexing_add(k, v)
+            return True
+        elif n._type == 'VAR_CONDITION' or n._type == 'VAR_REFER':
+            return False
+        elif n._type == 'VAR_ASSIGN':
+            if n.num_child() == 1:
+                return self._indexing(n._children[0], rule_name)
+            else:
+                return False
+        elif n._type == 'RULE_REFER':
+            ks = self._rule2input.get(n._attr['rule_name'])
+            if not ks:
+                return False
+            v = rule_name
+            for k in ks:
+                self._indexing_add(k, v)
+            return True
+        elif n._type == 'EMPTY|BEGIN' or n._type == 'EMPTY|END':
+            return False
+        elif n._type == 'WHITE_SPACE':
+            return False
+
+        return False
+
+    def indexing(self):
+        if not self._rules:
+            return False
+        ret = True
+        for rule_index, (rule_name, rule) in enumerate(self._rules):
+            if self._logger:
+                self._logger.info('Indexing {}: {}'.format(rule_index, rule_name))
+            rule_condition = rule.get('condition')
+            if not rule_condition:
+                continue
+            for rc_tree in rule_condition:
+                n = rc_tree.get_root_node()
+                if self._indexing(n, rule_name):
+                    if self._logger:
+                        self._logger.info('\tindexing Success')
+                else:
+                    if self._logger:
+                        self._logger.info('\tindexing Fail')
+                    ret = False
+
+        if self._logger:
+            self._logger.info(
+                    '[Indexing result]\ninput2rule: {}'.format(
+                        self._input2rule))
+            self._logger.info('rule2input: {}'.format(
+                self._rule2input))
+        return ret
 
     def _process(rname, rcont, text, extent, position, variables=None,
             logger=None, tabs=0):
@@ -66,7 +171,8 @@ class rule_process:
             result += [_result]
         return pass_fail, result, _extent, _position
  
-    def process(self, text, extent=extent(), position=0, variables=None, cur_node=None):
+    def process(self, text, extent=extent(), position=0, variables=None,
+            cur_node=None, indexing=False):
         # indexing 알아보기
         rule_cands = []
         for rname, rcont in self._rules:
