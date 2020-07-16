@@ -203,8 +203,10 @@ class rule_process:
         # 적용하기 (일부러 맨 뒤 규칙부터 적용)
         result = []
         if rule_cands:
-            rule_cands.reverse()
-            for rname in rule_cands:
+            b = len(rule_cands) - 1
+            e = -1
+            for ri in range(b, e, -1):
+                rname = rule_cands[ri]
                 rcont = self._rules[rname]
                 if self._logger:
                     self._logger.info('고려하는 규칙 = {}'.format(rname))
@@ -310,7 +312,9 @@ class rule_process:
                             break
                     if not chk_result:
                         continue
-                
+                else:
+                    continue
+
                 rule_process._merge_slot(slot1, slot2, text)
                 delidx.append(i+1)
                 i += 1
