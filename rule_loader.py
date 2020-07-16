@@ -18,6 +18,7 @@ from node.node_concat import node_concat
 from node.node_var_condition import node_var_condition
 from node.node_empty_begin import node_empty_begin
 from node.node_empty_end import node_empty_end
+from node.node_sm_int import node_sm_int
 import re
 import pdb
 
@@ -324,7 +325,7 @@ class rule_loader:
             cur_node.add_child(new_node)
 
             remain_txt = rule_phrase[e:]
-        # 타 규칙 언급
+        # 타 규칙 언급 (내장 규칙 포함)
         elif rule_refer and rule_refer.span()[0] == 0:
             b, e = rule_refer.span()
             cur_txt = rule_phrase[b+1:e]
@@ -333,16 +334,27 @@ class rule_loader:
             else:
                 rule_name = cur_txt
                 result_names = None
-            new_node = node_rule_refer(rule_name, result_names, self._logger)
-            cur_node.add_child(new_node)
 
-            if rule_name:
-                if self._R.get(rule_name):
-                    new_node2 = self._R.get(rule_name)
-                    new_node.add_child(new_node2)
+            if rule_name[:2] == '__' and rule_name[-2:] == '__':
+                rule_name = 'SM_' + rule_name[2:-2]
+                if rule_name == 'SM_INT':
+                    new_node = node_sm_int(self._logger)
+                cur_node.add_child(new_node)
+            else:
+                new_node = node_rule_refer(rule_name, result_names, self._logger)
+                cur_node.add_child(new_node)
+            
+                if rule_name:
+                    if self._R.get(rule_name):
+                        new_node2 = self._R.get(rule_name)
+                        new_node.add_child(new_node2)
+                    else:
+                        if self._logger:
+                            self._logger.error('non-existing rule-name for rule refer = {}'.format(rule_phrase))
                 else:
                     if self._logger:
-                        self._logger.error('non-existing rule-name for rule refer = {}'.format(rule_phrase))
+                        self._logger.error('rule-name is empty in {}'.format(cur_txt))
+
             remain_txt = rule_phrase[e:]
         # white-space
         elif white_space and white_space.span()[0] == 0:

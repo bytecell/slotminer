@@ -19,5 +19,12 @@
 		"condition": [
 			{"ext": "[$s0=@R01.value]좋아요"}
 		]
+	},
+	"Rm": {
+		"name": "slot_location",
+		"result": {"city": "[$s0]"},
+		"condition": [
+			{"ext": "[$s0=@__INT__]개"}
+		]
 	}
 }

@@ -90,6 +90,11 @@ class rule_process:
             return False
         elif n._type == 'WHITE_SPACE':
             return False
+        elif n._type == 'SM_INT':
+            for k in "0123456789,":
+                v = rule_name
+                self._indexing_add(k, v)
+            return True
 
         return False
 
