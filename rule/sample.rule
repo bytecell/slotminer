@@ -3,7 +3,8 @@
 		"name": "slot_sample",
 		"result": {"value": "[$s]"},
 		"condition": [
-			{"ext": "(캣|독){2}[$s=애완동물]"}
+			{"next": "(캣|독){2}[$s=애완동물]"},
+			{"ext": "!"}
 		]
 	},
 	"R02": {

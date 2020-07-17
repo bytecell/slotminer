@@ -113,6 +113,8 @@ class rule_process:
                 if self._indexing(n, rule_name):
                     if self._logger:
                         self._logger.info('\tindexing Success')
+                    ret = True
+                    break
                 else:
                     if self._logger:
                         self._logger.info('\tindexing Fail')
