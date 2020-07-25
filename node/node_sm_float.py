@@ -2,11 +2,11 @@ from node.node import node
 import re
 import pdb
 
-class node_sm_int(node):
+class node_sm_float(node):
     def __init__(self, logger):
         node.__init__(self, logger=logger)
-        self._type = 'SM_INT'
-        self._pattern = re.compile('[0-9,]+')
+        self._type = 'SM_FLOAT'
+        self._pattern = re.compile('[0-9.,]+')
         #self._attr['target_text'] = target_text
 
     def process(self, text, extent, position, var, add_extent=True):

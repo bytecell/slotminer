@@ -95,6 +95,11 @@ class rule_process:
                 v = rule_name
                 self._indexing_add(k, v)
             return True
+        elif n._type == 'SM_FLOAT':
+            for k in "0123456789,.":
+                v = rule_name
+                self._indexing_add(k, v)
+            return True
 
         return False
 
