@@ -20,6 +20,7 @@ from node.node_empty_begin import node_empty_begin
 from node.node_empty_end import node_empty_end
 from node.node_sm_int import node_sm_int
 from node.node_sm_float import node_sm_float
+from node.node_sm_cardinal_int import node_sm_cardinal_int
 import re
 import pdb
 
@@ -342,6 +343,8 @@ class rule_loader:
                     new_node = node_sm_int(self._logger)
                 elif rule_name == 'SM_FLOAT':
                     new_node = node_sm_float(self._logger)
+                elif rule_name == 'SM_CARDINAL_INT':
+                    new_node = node_sm_cardinal_int(self._logger)
                 cur_node.add_child(new_node)
             else:
                 new_node = node_rule_refer(rule_name, result_names, self._logger)

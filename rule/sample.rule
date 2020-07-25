@@ -25,7 +25,7 @@
 		"name": "slot_location",
 		"result": {"city": "[$s0]"},
 		"condition": [
-			{"ext": "[$s0=@__FLOAT__]개"}
+			{"ext": "[$s0=@__CARDINAL_INT__]개"}
 		]
 	}
 }

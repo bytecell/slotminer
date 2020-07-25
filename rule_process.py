@@ -100,6 +100,11 @@ class rule_process:
                 v = rule_name
                 self._indexing_add(k, v)
             return True
+        elif n._type == 'SM_CARDINAL_INT':
+            for k in "네다두마서세쉰스아여열예일한":
+                v = rule_name
+                self._indexing_add(k, v)
+            return True
 
         return False
 
