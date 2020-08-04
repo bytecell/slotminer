@@ -198,6 +198,8 @@ class rule_process:
         if indexing:
             k = text[position]
             rule_cands = self._input2rule.get(k)
+            if rule_cands == None:
+                rule_cands = []
             if self._input2rule[None]:
                 v = self._input2rule[None]
                 if v:
