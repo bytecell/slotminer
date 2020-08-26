@@ -25,23 +25,39 @@ class node_not_match_text(node):
             return extent, position, pass_fail, reserved
 
         target_text = self._attr['target_text']
-        pos_begin = position
-        i = 0
-        while i < len(target_text):
-            pos_begin -= 1
-            if pos_begin < 0:
-                break
-            if text[pos_begin] == ' ':
-                continue
-            i += 1
-        if i < len(target_text):
-            return extent, position, True, reserved
-        pos_end = position
+        check_backward = True
+        # 앞 방향으로 체크해야할지 알아보기
+        if position >= 1 and not extent.is_overlap((position-1, position)):
+            check_backward = True
+        else:
+            check_backward = False
+
+        # 각 방향에 따라 체크
+        if check_backward:
+            pos_begin = position
+            i = 0
+            while i < len(target_text):
+                pos_begin -= 1
+                if pos_begin < 0:
+                    break
+                if text[pos_begin] == ' ':
+                    continue
+                i += 1
+            if i < len(target_text):
+                return extent, position, True, reserved
+            pos_end = position
+        else:
+            pos_begin = position
+            pos_end = pos_begin + len(target_text)
+            if pos_end > len(text):
+                pos_end = len(text)
+        
         this_text = text[pos_begin:pos_end].lower().rstrip()
 
         # overlap check with extent
-        if add_extent and extent.is_overlap((pos_begin, pos_end)):
-            return extent, position, pass_fail, reserved
+        if add_extent and pos_end - pos_begin >= 1 and \
+            extent.is_overlap((pos_begin, pos_end)):
+                return extent, position, pass_fail, reserved
 
         if this_text == target_text:
             reserved += [pos_end-pos_begin]
