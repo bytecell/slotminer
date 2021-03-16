@@ -345,7 +345,7 @@ end ::= CDATA {end ::= <integer>}
 
 ## 기능2: 병원 마취전 평가서 텍스트로부터 정형화된 정보 추출
 
-- [H. Kim et al., 2020](https://www.mdpi.com/2076-3417/10/3/1151)
+- [Y.S. Jeong et al., 2021](https://pubmed.ncbi.nlm.nih.gov/33466610/)
 
 특히, 아래 두 가지에 해당되는 경우에는 본 프로젝트 책임자( pinodewaider_at_gmail.com )에게 연락하여 제휴/제안을 논의할 수 있다.
 
