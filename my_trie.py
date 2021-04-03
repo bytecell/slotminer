@@ -54,7 +54,14 @@ class my_trie:
                     if True in occupied[b:e]:
                         continue
                     occupied[b:e] = [True] * (e-b)
-                    new_results += [r]
+                    inserted = False
+                    for i, _r in enumerate(new_results):
+                        if _r[2][1] > r[2][1]:
+                            new_results.insert(i, r)
+                            inserted = True
+                            break
+                    if not inserted:
+                        new_results += [r]
             results = new_results
         return results
 
