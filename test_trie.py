@@ -17,7 +17,7 @@ while True:
     if not text:
         break
     start_time = time.time()
-    result = trie.process(text)
+    result = trie.process(text, longest=True)
     print(result)
     end_time = time.time()
     print('수행시간={}초'.format(end_time - start_time))

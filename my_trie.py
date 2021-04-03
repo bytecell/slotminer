@@ -28,16 +28,34 @@ class my_trie:
     
     def process(self, text, to_skip=[' '], longest=False):
         results = []
+        length_dict = {}
         for position in range(len(text)):
             if text[position] in to_skip:
                 continue
             _tags, _texts = self._process(text, position)
             for i in range(len(_tags)):
-                results += [(_tags[i],
-                    _texts[i],
-                    (position, position+len(_texts[i])))]
+                _tag, _text, _extent = _tags[i], _texts[i], (position, position+len(_texts[i]))
+                length = _extent[1] - _extent[0]
+                this_result = (_tag, _text, _extent)
+                results += [this_result]
+
+                if length_dict.get(length) == None:
+                    length_dict[length] = [this_result]
+                else:
+                    length_dict[length] += [this_result]
         if len(results) >= 2 and longest:
-            pass
+            new_results = []
+            occupied = [False] * len(text)
+            lengths = list(length_dict.keys())
+            lengths.sort(reverse=True)
+            for l in lengths:
+                for r in length_dict[l]:
+                    b, e = r[2]
+                    if True in occupied[b:e]:
+                        continue
+                    occupied[b:e] = [True] * (e-b)
+                    new_results += [r]
+            results = new_results
         return results
 
     def str(self, tabs=0):
