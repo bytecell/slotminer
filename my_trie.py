@@ -26,19 +26,19 @@ class my_trie:
             texts += [tmp_txt]
         return tags, texts
     
-    def process(self, text, to_skip=[' ']):
-        tags = []
-        texts = []
-        extents = []
+    def process(self, text, to_skip=[' '], longest=False):
+        results = []
         for position in range(len(text)):
             if text[position] in to_skip:
                 continue
             _tags, _texts = self._process(text, position)
             for i in range(len(_tags)):
-                tags += [_tags[i]]
-                texts += [_texts[i]]
-                extents += [(position, position+len(_texts[i]))]
-        return tags, texts, extents
+                results += [(_tags[i],
+                    _texts[i],
+                    (position, position+len(_texts[i])))]
+        if len(results) >= 2 and longest:
+            pass
+        return results
 
     def str(self, tabs=0):
         self._root_node.str('ROOT', tabs)
