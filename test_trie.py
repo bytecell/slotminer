@@ -1,4 +1,4 @@
-from trie_loader import trie_loader
+from slotminer.trie_loader import trie_loader
 import logging
 import time
 import pdb

@@ -1,5 +1,5 @@
-from rule_loader import rule_loader
-from rule_process import rule_process
+from slotminer.rule_loader import rule_loader
+from slotminer.rule_process import rule_process
 import logging
 import time
 import pdb
