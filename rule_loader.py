@@ -20,6 +20,9 @@ from node.node_empty_begin import node_empty_begin
 from node.node_empty_end import node_empty_end
 from node.node_sm_int import node_sm_int
 from node.node_sm_float import node_sm_float
+from node.node_sm_url import node_sm_url
+from node.node_sm_mail import node_sm_mail
+from node.node_sm_phone import node_sm_phone
 from node.node_sm_cardinal_int import node_sm_cardinal_int
 import re
 import pdb
@@ -343,6 +346,12 @@ class rule_loader:
                     new_node = node_sm_int(self._logger)
                 elif rule_name == 'SM_FLOAT':
                     new_node = node_sm_float(self._logger)
+                elif rule_name == 'SM_URL':
+                    new_node = node_sm_url(self._logger)
+                elif rule_name == 'SM_MAIL':
+                    new_node = node_sm_mail(self._logger)
+                elif rule_name == 'SM_PHONE':
+                    new_node = node_sm_phone(self._logger)
                 elif rule_name == 'SM_CARDINAL_INT':
                     new_node = node_sm_cardinal_int(self._logger)
                 cur_node.add_child(new_node)

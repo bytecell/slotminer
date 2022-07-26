@@ -52,6 +52,8 @@ class rule_process:
             return ret
         elif n._type == 'AND' or n._type == 'CONCAT':
             for cnode in n._children:
+                if cnode is None:
+                    pdb.set_trace()
                 if self._indexing(cnode, rule_name):
                     return True
             return False
@@ -90,6 +92,21 @@ class rule_process:
             return False
         elif n._type == 'WHITE_SPACE':
             return False
+        elif n._type == 'SM_MAIL':
+            for k in "abcdefghijklmnopqrstuvwxyz0123456789":
+                v = rule_name
+                self._indexing_add(k, v)
+            return True
+        elif n._type == 'SM_PHONE':
+            for k in "0123456789":
+                v = rule_name
+                self._indexing_add(k, v)
+            return True
+        elif n._type == 'SM_URL':
+            for k in "abcdefghijklmnopqrstuvwxyz":
+                v = rule_name
+                self._indexing_add(k, v)
+            return True
         elif n._type == 'SM_INT':
             for k in "0123456789,":
                 v = rule_name
