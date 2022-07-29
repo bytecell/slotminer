@@ -6,7 +6,7 @@ class node_sm_url(node):
     def __init__(self, logger):
         node.__init__(self, logger=logger)
         self._type = 'SM_URL'
-        self._pattern = re.compile('((http(s)?|ftp|ssh)://)?[a-zA-Z0-9:.,$&/-=_+%]+')
+        self._pattern = re.compile('((http(s)?|ftp|ssh)://)?[a-zA-Z0-9:.,$&/-=_+%]+[.][a-zA-Z0-9:.,$&/-=_+%]+')
         #self._attr['target_text'] = target_text
 
     def process(self, text, extent, position, var, add_extent=True):
