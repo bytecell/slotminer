@@ -27,5 +27,12 @@
 		"condition": [
 			{"ext": "[$s0=@__CARDINAL_INT__]개(입)!"}
 		]
+	},
+	"Rn": {
+		"name": "slot_sample",
+		"result": {"value": "[$s0]", "value2": "[$s1]"},
+		"condition": [
+			{"ext": "[$s0=@__CARDINAL_INT__]개[$s1=$s0]"}
+		]
 	}
 }

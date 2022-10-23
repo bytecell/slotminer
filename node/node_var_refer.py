@@ -32,6 +32,6 @@ class node_var_refer(node):
                 return extent, position, pass_fail, reserved
             digit = int(func)
             for i in range(digit):
-                reserved.append(var.get(name))
+                reserved.append(var.glance(name))
 
         return extent, position, pass_fail, reserved
